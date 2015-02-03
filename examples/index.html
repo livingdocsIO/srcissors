@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>srcissors.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!--  css -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/srcissors.css">
+  </head>
+  <body>
+
+    <div class="arena">
+      <div class="view">
+        <img class="image" src="">
+      </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-2.1.1.js"></script>
+
+    <!-- srcissors. yeah! -->
+    <script src="/srcissors.js"></script>
+
+    <script>
+
+      $(document).ready(function() {
+        srcissors.setup({
+          arena: $('.arena'),
+          view: $('.view'),
+          url: "/images/diagonal.jpg"
+        })
+      });
+
+    </script>
+
+  </body>
+</html>

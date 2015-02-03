@@ -1,0 +1,42 @@
+.arena {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  background-color: #222;
+}
+
+.view {
+
+  /* Center */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -moz-transform: translate(-50%,-50%);
+  -o-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+
+  /* Use overflow hidden instead of a background image */
+  overflow: hidden;
+
+  /* Animate width and height */
+  transition: all 0.2s;
+
+  /* View height and width */
+  width: 300px;
+  height: 400px;
+
+  cursor: all-scroll;
+}
+
+.image {
+  position: absolute;;
+
+  /* prevent flickering when position is updated after the image is loaded */
+  display: none;
+}
+
