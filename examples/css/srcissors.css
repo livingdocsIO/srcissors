@@ -94,6 +94,10 @@
   text-decoration: none;
 }
 
+.zoom-controls a:focus {
+  outline: none;
+}
+
 .zoom-controls a:hover {
   background-color: #f8f8f8
 }
