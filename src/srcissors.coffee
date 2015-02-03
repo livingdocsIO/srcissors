@@ -177,9 +177,17 @@ module.exports = window.srcissors =
 
   enforceZoom: ({ width, height }) ->
     if width?
-      width = @imageWidth if width > @imageWidth
+      if width > @imageWidth
+        #  prevent zooming in past native image resolution
+        width = @imageWidth
+      else if width < @viewWidth
+        # prevent zooming out past covering the view completely
+        width = @viewWidth
     if height?
-      height = @imageHeight if height > @imageHeight
+      if height > @imageHeight
+        height = @imageHeight
+      else if height < @viewHeight
+        height = @viewHeight
 
     { width, height }
 
