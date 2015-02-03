@@ -1,3 +1,4 @@
+Preview = require('./preview')
 Events = require('./events')
 
 module.exports = window.srcissors =
@@ -13,38 +14,24 @@ module.exports = window.srcissors =
     @viewHeight = @view.height()
     @viewRatio = @viewWidth / @viewHeight
 
-    @img.on 'load', =>
-      @onImageReady()
-
-    @img.attr('src', url)
-
     # @zoomStep = 25%
     @zoomInStep = 1.25 # 1.25 -> 125%
     @zoomOutStep = 1 / @zoomInStep
     @isPanning = false
 
+    @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img)
+    @preview.setImage({ url })
 
-  onImageReady: ->
+
+  onPreviewReady: ({ width, height }) ->
     @events = new Events(this)
 
-    @imageWidth = @img.width()
-    @imageHeight = @img.height()
+    @imageWidth = width
+    @imageHeight = height
     @imageRatio = @imageWidth / @imageHeight
-
-    @preview =
-      x: 0
-      y: 0
-      width: @imageWidth
-      height: @imageHeight
 
     @zoomAllOut()
     @center()
-    @img.show()
-
-
-  updatePreviewDimensions: ->
-    @preview.width = @img.width()
-    @preview.height = @img.height()
 
 
   getCrop: ->
@@ -108,16 +95,15 @@ module.exports = window.srcissors =
   zoom: ({ width, height, viewX, viewY }) ->
     { width, height } = @enforceZoom({ width, height })
 
-    if width?
-      @img.css(width: "#{ width }px", height: 'auto')
-    else if height?
-      @img.css(width: 'auto', height: "#{ height }px")
-
     viewX ?= @viewWidth / 2
     viewY ?= @viewHeight / 2
     focusPoint = @getFocusPoint({ viewX, viewY })
 
-    @updatePreviewDimensions()
+    if width?
+      @preview.setWidth(width)
+    else if height?
+      @preview.setHeight(height)
+
     @focus
       percentX: focusPoint.percentX
       percentY: focusPoint.percentY
@@ -153,9 +139,7 @@ module.exports = window.srcissors =
   # - y {Number} pixels to pan to the top
   pan: (data) ->
     data = @enforceXy(data)
-    @img.css(transform: "translate(-#{ data.x }px, -#{ data.y }px)")
-    @preview.x = data.x
-    @preview.y = data.y
+    @preview.pan(data.x, data.y)
 
 
   # Validations
@@ -190,14 +174,6 @@ module.exports = window.srcissors =
         height = @viewHeight
 
     { width, height }
-
-
-  # validateForViewDimensions: ({ width, height }) ->
-  #   if @preview.width < @viewWidth
-  #     @preview.width = @viewWidth
-
-  #   if @preview.height < @viewHeight
-  #     @preview.height = @viewHeight
 
 
   # Calculations
