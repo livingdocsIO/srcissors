@@ -54,3 +54,65 @@
   display: none;
 }
 
+
+/* Zoom Controls */
+
+.top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 10;
+}
+
+.zoom-controls {
+  position: relative;
+  margin: 10px;
+
+  background-color: #fff;
+  border: 1px solid #999;
+  border-color: rgba(0, 0, 0, .4);
+  border-radius: 3px;
+  box-shadow: none;
+
+  cursor: auto;
+
+}
+
+.zoom-controls a {
+  display: block;
+
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  background-repeat: none;
+
+  color: rgba(0, 0, 0, .75);
+  border-bottom: 1px solid #ddd;
+  border-bottom-color: rgba(0, 0, 0, .1);
+
+  text-decoration: none;
+}
+
+.zoom-controls a:hover {
+  background-color: #f8f8f8
+}
+
+
+.icon-zoom {
+  background-image: url('/assets/zoom-icons@2x.png');
+  /* set size to half of the @2x image */
+  background-size: 26px 52px;
+  content: '';
+
+  /* hide text */
+  text-indent: -10em;
+}
+
+.icon-zoom-in {
+  background-position: 0 0;
+}
+
+.icon-zoom-out {
+  background-position: 0 -26px;
+}

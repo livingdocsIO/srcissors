@@ -87,7 +87,7 @@ module.exports = window.srcissors =
       @zoom(height: @viewHeight)
 
 
-  zoomIn: (params={})->
+  zoomIn: (params={}) ->
     if @isWidthRestricting()
       params.width = @preview.width * @zoomInStep
     else
@@ -96,11 +96,13 @@ module.exports = window.srcissors =
     @zoom(params)
 
 
-  zoomOut: ->
+  zoomOut: (params={}) ->
     if @isWidthRestricting()
-      @zoom(width: @preview.width * @zoomOutStep)
+      params.width = @preview.width * @zoomOutStep
     else
-      @zoom(height: @preview.height * @zoomOutStep)
+      params.height = @preview.height * @zoomOutStep
+
+    @zoom(params)
 
 
   zoom: ({ width, height, viewX, viewY }) ->
