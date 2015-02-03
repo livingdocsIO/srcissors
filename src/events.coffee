@@ -7,6 +7,7 @@ module.exports = class Events
     @pan()
     @doubleClick()
     @preventBrowserDragDrop()
+    @resizeView()
 
 
   pan: ->
@@ -18,14 +19,14 @@ module.exports = class Events
 
       e1.preventDefault()
 
-      $doc.on 'mousemove.srcissors', (e2) =>
+      $doc.on 'mousemove.srcissors-pan', (e2) =>
         panData.dx = e2.pageX - e1.pageX
         panData.dy = e2.pageY - e1.pageY
         @parent.onPan(panData)
 
-      .on 'mouseup.srcissors', () =>
-        $doc.off('mouseup.srcissors')
-        $doc.off('mousemove.srcissors')
+      .on 'mouseup.srcissors-pan', =>
+        $doc.off('mouseup.srcissors-pan')
+        $doc.off('mousemove.srcissors-pan')
 
         # only trigger panEnd if pan has been called
         @parent.onPanEnd() if panData.dx?
@@ -45,3 +46,49 @@ module.exports = class Events
   preventBrowserDragDrop: ->
     @view.on('dragstart', -> return false)
 
+
+  # Resize View
+  # -----------
+
+  resizeView: ->
+
+    $template = $('<div>')
+    $template.addClass('resize-handler')
+
+    positions = ['top', 'right', 'bottom', 'left']
+    positions.forEach (position) =>
+      $handler = $template.clone()
+      $handler.addClass("resize-handler-#{ position }")
+      $handler.on 'mousedown.srcissors', @getResizeMouseDown(position)
+
+      @view.append($handler)
+
+
+  getResizeMouseDown: (position) ->
+    $doc = $(document)
+
+    (event) =>
+      lastX = event.pageX
+      lastY = event.pageY
+
+      event.stopPropagation()
+
+      $doc.on 'mousemove.srcissors-resize', (e2) =>
+        switch position
+          when 'top', 'bottom'
+            dy = e2.pageY - lastY
+            dy = -dy if position == 'top'
+            lastY = e2.pageY
+          when 'left', 'right'
+            dx = e2.pageX - lastX
+            dx = -dx if position == 'left'
+            lastX = e2.pageX
+
+        @parent.onResize({ position, dx, dy })
+
+      .on 'mouseup.srcissors-resize', =>
+        $doc.off('mouseup.srcissors-resize')
+        $doc.off('mousemove.srcissors-resize')
+
+        # only trigger panEnd if pan has been called
+        @parent.onResizeEnd({ position })

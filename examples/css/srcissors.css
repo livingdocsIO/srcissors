@@ -1,3 +1,7 @@
+body {
+  background-color: #222;
+}
+
 .arena {
   position: absolute;
   top: 0;
@@ -5,7 +9,7 @@
   bottom: 0;
   left: 0;
 
-  background-color: #222;
+  margin: 1em;
 }
 
 .view {
@@ -19,16 +23,18 @@
   -o-transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
   transform: translate(-50%,-50%);
+}
+
+.clip-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   /* Use overflow hidden instead of a background image */
   overflow: hidden;
 
-  /* Animate width and height */
-  transition: all 0.2s;
-
-  /* View height and width */
-  width: 300px;
-  height: 400px;
 }
 
 .view-hover-cursor {
@@ -110,7 +116,7 @@
   content: '';
 
   /* hide text */
-  text-indent: -10em;
+  /*text-indent: -10em;*/
 }
 
 .icon-zoom-in {
@@ -128,3 +134,47 @@
       -ms-user-select: none;
           user-select: none;
 }
+
+/* Resize Handlers */
+
+.resize-handler {
+  position: absolute;
+  cursor: crosshair;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.resize-handler-top {
+  height: 6px;
+  top: -3px;
+  bottom: auto;
+
+  cursor: row-resize;
+}
+
+.resize-handler-right {
+  width: 6px;
+  right: -3px;
+  left: auto;
+
+  cursor: col-resize;
+}
+
+.resize-handler-bottom {
+  height: 6px;
+  bottom: -3px;
+  top: auto;
+
+  cursor: row-resize;
+}
+
+.resize-handler-left {
+  width: 6px;
+  left: -3px;
+  right: auto;
+
+  cursor: col-resize;
+}
+

@@ -8,11 +8,14 @@ module.exports = window.srcissors =
     @view = $(view)
     @img = @view.find('img')
 
-    @viewMaxWidth = @arena.width()
-    @viewMaxHeight = @arena.height()
-    @viewWidth = @view.width()
-    @viewHeight = @view.height()
-    @viewRatio = @viewWidth / @viewHeight
+    @arenaWidth = @arena.width()
+    @arenaHeight = @arena.height()
+
+    @minViewWidth = 100
+    @minViewHeight = 100
+    @minViewRatio = undefined
+    @maxViewRatio = undefined
+    @setViewDimensions(width: 300, height: 400)
 
     # @zoomStep = 25%
     @zoomInStep = 1.25 # 1.25 -> 125%
@@ -51,7 +54,6 @@ module.exports = window.srcissors =
     @pan(x: newX, y: newY)
 
 
-
   onPanEnd: ->
     @isPanning = false
     @arena.removeClass('view-is-panning')
@@ -62,6 +64,47 @@ module.exports = window.srcissors =
     viewX = pageX - left
     viewY = pageY - top
     @zoomIn({ viewX, viewY })
+
+
+  onResize: ({ position, dx, dy })->
+    # console.log 'resize', arguments[0]
+    if position in ['top', 'bottom']
+      dy = 2 * dy # Because it's centered we need to change width by factor two
+      @resize(width: @viewWidth, height: @viewHeight + dy)
+    else if position in ['left', 'right']
+      dx = 2 * dx
+      @resize(width: @viewWidth + dx, height: @viewHeight)
+
+
+  onResizeEnd: ->
+    console.log 'resize end'
+
+
+  resize: ({ width, height }) ->
+    { width, height } = @enforceViewDimensions({ width, height })
+    @setViewDimensions({ width, height })
+    @zoom(width: @preview.width, height: @preview.height)
+
+
+  setViewDimensions: ({ width, height })->
+    @view.css(width: width, height: height)
+    @viewWidth = width
+    @viewHeight = height
+    @viewRatio = @viewWidth / @viewHeight
+
+
+  enforceViewDimensions: ({ width, height }) ->
+    if width < @minViewWidth
+      width = @minViewWidth
+    else if width > @arenaWidth
+      width = @arenaWidth
+
+    if height < @minViewHeight
+      height = @minViewHeight
+    else if height > @arenaHeight
+      height = @arenaHeight
+
+    { width, height }
 
 
   # Update view
@@ -193,7 +236,7 @@ module.exports = window.srcissors =
   # -------------------
 
   debug: ->
-    arena: "#{ @viewMaxWidth }px :#{ @viewMaxHeight }px"
+    arena: "#{ @arenaWidth }px :#{ @arenaHeight }px"
     imgage: "#{ @imageWidth }px :#{ @imageHeight }px"
     preview: "#{ @preview.width }px :#{ @preview.height }px"
 
