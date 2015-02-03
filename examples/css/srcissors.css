@@ -82,7 +82,12 @@ body {
   box-shadow: none;
 
   cursor: auto;
+}
 
+.zoom-controls-outside {
+  position: absolute;
+  right: 0;
+  margin-top: 0;
 }
 
 .zoom-controls a {
