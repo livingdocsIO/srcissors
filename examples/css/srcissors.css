@@ -116,3 +116,11 @@
 .icon-zoom-out {
   background-position: 0 -26px;
 }
+
+/* prevent user selections */
+.no-selection {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
