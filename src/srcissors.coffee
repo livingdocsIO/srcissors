@@ -7,6 +7,7 @@ module.exports = window.srcissors =
     @arena = $(arena)
     @view = $(view)
     @img = @view.find('img')
+    @outline = @view.find('.image-outline')
 
     @arenaWidth = @arena.width()
     @arenaHeight = @arena.height()
@@ -21,7 +22,7 @@ module.exports = window.srcissors =
     @zoomOutStep = 1 / @zoomInStep
     @isPanning = false
 
-    @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img)
+    @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img, outline: @outline)
     @preview.setImage({ url })
 
 
@@ -37,7 +38,6 @@ module.exports = window.srcissors =
     @center()
 
 
-
   getCrop: ->
     # calculate crop info from preview (factor in zoom!)
 
@@ -49,6 +49,7 @@ module.exports = window.srcissors =
     if not @isPanning
       @isPanning = true
       @arena.addClass('view-is-panning')
+      @outline.addClass('image-outline-active')
 
     newX = data.startX - data.dx
     newY = data.startY - data.dy
@@ -58,6 +59,7 @@ module.exports = window.srcissors =
   onPanEnd: ->
     @isPanning = false
     @arena.removeClass('view-is-panning')
+    @outline.removeClass('image-outline-active')
 
 
   onDoubleClick: ({ pageX, pageY }) ->

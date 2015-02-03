@@ -32,6 +32,7 @@ body {
   right: 0;
   bottom: 0;
 
+
   /* Use overflow hidden instead of a background image */
   overflow: hidden;
 
@@ -67,13 +68,12 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-
-  z-index: 10;
 }
 
 .zoom-controls {
   position: relative;
   margin: 10px;
+
 
   background-color: #fff;
   border: 1px solid #999;
@@ -176,5 +176,20 @@ body {
   right: auto;
 
   cursor: col-resize;
+}
+
+
+/* Outline */
+.image-outline {
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.image-outline-active {
+  opacity: 1;
 }
 

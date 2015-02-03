@@ -1,6 +1,6 @@
 module.exports = class Preview
 
-  constructor: ({ @onReady, @img }) ->
+  constructor: ({ @onReady, @img, @outline }) ->
     @x = @y = 0
     @width = @height = 0
 
@@ -27,8 +27,10 @@ module.exports = class Preview
   updateImageDimensions: ->
     @width = @img.width()
     @height = @img.height()
+    @outline.css(width: "#{ @width }px", height: "#{ @height }px") if @outline
 
 
   pan: (@x, @y) ->
     @img.css(transform: "translate(-#{ @x }px, -#{ @y }px)")
+    @outline.css(transform: "translate(-#{ @x }px, -#{ @y }px)") if @outline
 
