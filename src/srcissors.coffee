@@ -66,8 +66,11 @@ module.exports = window.srcissors =
     @zoomIn({ viewX, viewY })
 
 
-  onResize: ({ position, dx, dy })->
-    # console.log 'resize', arguments[0]
+  onResize: ({ position, dx, dy }) ->
+    if not @isResizing
+      @isResizing = true
+      @resizeFocusPoint = @getFocusPoint()
+
     if position in ['top', 'bottom']
       dy = 2 * dy # Because it's centered we need to change width by factor two
       @resize(width: @viewWidth, height: @viewHeight + dy)
@@ -77,13 +80,24 @@ module.exports = window.srcissors =
 
 
   onResizeEnd: ->
-    # nothing to do
+    @isResizing = false
+    @resizeFocusPoint = undefined
 
 
   resize: ({ width, height }) ->
     { width, height } = @enforceViewDimensions({ width, height })
+    { width, height } = @enforceAspectRatio({ width, height })
     @setViewDimensions({ width, height })
-    @zoom(width: @preview.width, height: @preview.height)
+
+    # Update view center of focus point
+    @resizeFocusPoint.viewX = @viewWidth / 2
+    @resizeFocusPoint.viewY = @viewHeight / 2
+
+    # Ensure dimensions and focus
+    @zoom
+      width: @preview.width
+      height: @preview.height
+      focusPoint: @resizeFocusPoint
 
 
   setViewDimensions: ({ width, height })->
@@ -104,6 +118,10 @@ module.exports = window.srcissors =
     else if height > @arenaHeight
       height = @arenaHeight
 
+    { width, height }
+
+
+  enforceAspectRatio: ({ width, height }) ->
     { width, height }
 
 
@@ -135,32 +153,27 @@ module.exports = window.srcissors =
     @zoom(params)
 
 
-  zoom: ({ width, height, viewX, viewY }) ->
+  zoom: ({ width, height, viewX, viewY, focusPoint }) ->
+    focusPoint ?= @getFocusPoint({ viewX, viewY })
+
     { width, height } = @enforceZoom({ width, height })
-
-    viewX ?= @viewWidth / 2
-    viewY ?= @viewHeight / 2
-    focusPoint = @getFocusPoint({ viewX, viewY })
-
     if width?
       @preview.setWidth(width)
     else if height?
       @preview.setHeight(height)
 
-    @focus
-      percentX: focusPoint.percentX
-      percentY: focusPoint.percentY
-      viewX: viewX
-      viewY: viewY
+    @focus(focusPoint)
 
 
   # returns {Object} e.g. percentX: 0.2, percentY: 0.5
-  getFocusPoint: ({ viewX, viewY }) ->
+  getFocusPoint: ({ viewX, viewY }={}) ->
+    viewX ?= @viewWidth / 2
+    viewY ?= @viewHeight / 2
     x = @preview.x + viewX
     y = @preview.y + viewY
     percentX = x / @preview.width
     percentY = y / @preview.height
-    { percentX, percentY }
+    { percentX, percentY, viewX, viewY }
 
 
   focus: ({ percentX, percentY, viewX, viewY }) ->
@@ -168,6 +181,7 @@ module.exports = window.srcissors =
     y = @preview.height * percentY
     x = x - viewX
     y = y - viewY
+
     @pan({ x, y })
 
 
