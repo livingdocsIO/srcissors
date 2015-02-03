@@ -77,7 +77,7 @@ module.exports = window.srcissors =
 
 
   onResizeEnd: ->
-    console.log 'resize end'
+    # nothing to do
 
 
   resize: ({ width, height }) ->
@@ -206,15 +206,15 @@ module.exports = window.srcissors =
     if width?
       if width > @imageWidth
         #  prevent zooming in past native image resolution
-        width = @imageWidth
+        return { width: @imageWidth }
       else if width < @viewWidth
         # prevent zooming out past covering the view completely
-        width = @viewWidth
+        return { width: @viewWidth }
     if height?
       if height > @imageHeight
-        height = @imageHeight
+        return { height: @imageHeight }
       else if height < @viewHeight
-        height = @viewHeight
+        return { height: @viewHeight }
 
     { width, height }
 
@@ -237,6 +237,7 @@ module.exports = window.srcissors =
 
   debug: ->
     arena: "#{ @arenaWidth }px :#{ @arenaHeight }px"
+    view: "#{ @viewWidth }px :#{ @viewHeight }px"
     imgage: "#{ @imageWidth }px :#{ @imageHeight }px"
     preview: "#{ @preview.width }px :#{ @preview.height }px"
 
