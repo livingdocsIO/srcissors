@@ -21,6 +21,7 @@ module.exports = window.srcissors =
     # @zoomStep = 25%
     @zoomInStep = 1.25 # 1.25 -> 125%
     @zoomOutStep = 1 / @zoomInStep
+    @isPanning = false
 
 
   onImageReady: ->
@@ -54,13 +55,19 @@ module.exports = window.srcissors =
   # --------------
 
   onPan: (data) ->
+    if not @isPanning
+      @isPanning = true
+      @arena.addClass('view-is-panning')
+
     newX = data.startX - data.dx
     newY = data.startY - data.dy
     @pan(x: newX, y: newY)
 
 
+
   onPanEnd: ->
-    # nothing to do for now...
+    @isPanning = false
+    @arena.removeClass('view-is-panning')
 
 
   onDoubleClick: ({ pageX, pageY }) ->

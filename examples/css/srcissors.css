@@ -29,8 +29,22 @@
   /* View height and width */
   width: 300px;
   height: 400px;
+}
 
+.view-hover-cursor {
+  /* IE does not support grab */
   cursor: all-scroll;
+
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+}
+
+.view-is-panning .view,
+.view-is-panning {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: grabbing;
 }
 
 .image {
