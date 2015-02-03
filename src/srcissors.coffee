@@ -15,7 +15,6 @@ module.exports = window.srcissors =
     @minViewHeight = 100
     @minViewRatio = undefined
     @maxViewRatio = undefined
-    @setViewDimensions(width: 300, height: 400)
 
     # @zoomStep = 25%
     @zoomInStep = 1.25 # 1.25 -> 125%
@@ -33,8 +32,10 @@ module.exports = window.srcissors =
     @imageHeight = height
     @imageRatio = @imageWidth / @imageHeight
 
+    @setViewDimensions(width: 300, height: 400)
     @zoomAllOut()
     @center()
+
 
 
   getCrop: ->
@@ -85,8 +86,6 @@ module.exports = window.srcissors =
 
 
   resize: ({ width, height }) ->
-    { width, height } = @enforceViewDimensions({ width, height })
-    { width, height } = @enforceAspectRatio({ width, height })
     @setViewDimensions({ width, height })
 
     # Update view center of focus point
@@ -100,7 +99,9 @@ module.exports = window.srcissors =
       focusPoint: @resizeFocusPoint
 
 
-  setViewDimensions: ({ width, height })->
+  setViewDimensions: ({ width, height }) ->
+    { width, height } = @enforceViewDimensions({ width, height })
+    { width, height } = @enforceAspectRatio({ width, height })
     @view.css(width: width, height: height)
     @viewWidth = width
     @viewHeight = height
@@ -110,11 +111,15 @@ module.exports = window.srcissors =
   enforceViewDimensions: ({ width, height }) ->
     if width < @minViewWidth
       width = @minViewWidth
+    else if width > @imageWidth
+      width = @imageWidth
     else if width > @arenaWidth
       width = @arenaWidth
 
     if height < @minViewHeight
       height = @minViewHeight
+    else if height > @imageHeight
+      height = @imageHeight
     else if height > @arenaHeight
       height = @arenaHeight
 
