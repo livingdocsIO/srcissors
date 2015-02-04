@@ -3,40 +3,61 @@ Events = require('./events')
 
 module.exports = class Crop
 
-  constructor: ({ arena, view, url }) ->
-    @arena = $(arena)
-    @view = $(view)
-    @img = @view.find('img')
-    @outline = @view.find('.image-outline')
+  constructor: (
+      { @arena, @view, @img, @outline, url, @fit }
+    ) ->
+      # State
+      @isPanning = false
 
-    @arenaWidth = @arena.width()
-    @arenaHeight = @arena.height()
+      # Confguration
+      @width = undefined
+      @height = undefined
+      @ratio = undefined
 
-    @minViewWidth = 100
-    @minViewHeight = 100
-    @minViewRatio = undefined
-    @maxViewRatio = undefined
+      @minViewWidth = 100
+      @minViewHeight = 100
+      @minViewRatio = 1 / 1.5
+      @maxViewRatio = 1.5 / 1
 
-    @canChangeWidth = true
-    @canChangeHeight = true
+      @fixedWidth = 300
+      @fixedHeight = undefined
 
-    # @zoomStep = 25%
-    @zoomInStep = 1.25 # 1.25 -> 125%
-    @zoomOutStep = 1 / @zoomInStep
-    @isPanning = false
+      @maxAreaRatio = undefined # 3 / 4 # e.g: 4 / 3 or undefined
 
-    @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img, outline: @outline)
-    @preview.setImage({ url })
+      # @zoomStep = 25%
+      @zoomInStep = 1.25 # 1.25 -> 125%
+      @zoomOutStep = 1 / @zoomInStep
+
+      @arenaWidth = @arena.width()
+      @arenaHeight = @arena.height()
+
+      @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img, outline: @outline)
+      @preview.setImage({ url })
 
 
   onPreviewReady: ({ width, height }) ->
-    @events = new Events(this)
+    @events = new Events(parent: this, view: @view, horizontal: !@fixedWidth, vertical: !@fixedHeight)
 
     @imageWidth = width
     @imageHeight = height
     @imageRatio = @imageWidth / @imageHeight
 
-    @setViewDimensions(width: 300, height: 400)
+    @width = @imageWidth if not @width
+    @height = @imageHeight if not @height
+
+    keepDimension = undefined
+    if @fixedWidth
+      @width = @fixedWidth
+      keepDimension = 'width'
+    if @fixedHeight
+      @height = @fixedHeight
+      keepDimension = 'height'
+
+    @setViewDimensions
+      width: @width
+      height: @height
+      keepDimension: keepDimension
+
     @zoomAllOut()
     @center()
 
@@ -79,10 +100,10 @@ module.exports = class Crop
 
     if position in ['top', 'bottom']
       dy = 2 * dy # Because it's centered we need to change width by factor two
-      @resize(width: @viewWidth, height: @viewHeight + dy)
+      @resize(width: @viewWidth, height: @viewHeight + dy, keepDimension: 'height')
     else if position in ['left', 'right']
       dx = 2 * dx
-      @resize(width: @viewWidth + dx, height: @viewHeight)
+      @resize(width: @viewWidth + dx, height: @viewHeight, keepDimension: 'width')
 
 
   onResizeEnd: ->
@@ -90,8 +111,8 @@ module.exports = class Crop
     @resizeFocusPoint = undefined
 
 
-  resize: ({ width, height }) ->
-    @setViewDimensions({ width, height })
+  resize: ({ width, height, keepDimension }) ->
+    @setViewDimensions({ width, height, keepDimension })
 
     # Update view center of focus point
     @resizeFocusPoint.viewX = @viewWidth / 2
@@ -104,13 +125,19 @@ module.exports = class Crop
       focusPoint: @resizeFocusPoint
 
 
-  setViewDimensions: ({ width, height }) ->
+  setViewDimensions: ({ width, height, keepDimension }) ->
+    if @fit
+      { width, height } = @fitView({ width, height, keepDimension })
+      { width, height } = @enforceMaxArea({ width, height, keepDimension }) if @maxAreaRatio
+    else if @fixedWidth || @fixedHeight
+      { width, height } = @enforceFixedDimension({ width, height })
+
+    { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
     { width, height } = @enforceViewDimensions({ width, height })
-    { width, height } = @enforceAspectRatio({ width, height })
     @view.css(width: width, height: height)
     @viewWidth = width
     @viewHeight = height
-    @viewRatio = @viewWidth / @viewHeight
+    @viewRatio = width / height
 
 
   enforceViewDimensions: ({ width, height }) ->
@@ -128,10 +155,6 @@ module.exports = class Crop
     else if height > @arenaHeight
       height = @arenaHeight
 
-    { width, height }
-
-
-  enforceAspectRatio: ({ width, height }) ->
     { width, height }
 
 
@@ -254,6 +277,99 @@ module.exports = class Crop
   # Check if the width or height is restricting
   isWidthRestricting: ->
     @viewRatio >= @imageRatio
+
+
+  calculateMaxArea: ->
+    if @maxAreaRatio
+      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @maxAreaRatio)
+      maxArea = width * height
+      return maxArea
+
+
+  enforceFixedDimension: ({ width, height, keepDimension }) ->
+    if @fixedWidth
+      { width, height } = @setRatio(ratio: width / height, width: @fixedWidth)
+    else if @fixedHeight
+      { width, height } = @setRatio(ratio: width / height, height: @fixedHeight)
+
+    { width, height }
+
+
+  enforceMaxMinRatio: ({ width, height, keepDimension }) ->
+    ratio = width / height
+    if @minViewRatio && ratio < @minViewRatio
+      if @fixedWidth
+        { width, height } = @setRatio(ratio: @minViewRatio, width: @fixedWidth)
+      else if @fixedHeight
+        { width, height } = @setRatio(ratio: @minViewRatio, height: @fixedHeight)
+      else if @fit
+        { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @minViewRatio)
+      else
+        { width, height } = @setRatio({ ratio: @minViewRatio, width, height, keepDimension })
+    else if @maxViewRatio && ratio > @maxViewRatio
+      if @fixedWidth
+        { width, height } = @setRatio(ratio: @maxViewRatio, width: @fixedWidth)
+      else if @fixedHeight
+        { width, height } = @setRatio(ratio: @maxViewRatio, height: @fixedHeight)
+      else if @fit
+        { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @maxViewRatio)
+      else
+        { width, height } = @setRatio({ ratio: @maxViewRatio, width, height, keepDimension })
+
+    { width, height }
+
+
+  setRatio: ({ ratio, width, height, keepDimension }) ->
+    if keepDimension == 'width' || not height?
+      height = width / ratio
+    else if keepDimension == 'height' || not width?
+      width = height * ratio
+    else
+      width = height * ratio
+
+    { width, height }
+
+
+  enforceMaxArea: ({ width, height, keepDimension }) ->
+    ratio = width / height
+    maxArea = @calculateMaxArea()
+    if maxArea && width * height > maxArea
+      if keepDimension == 'width'
+        height = maxArea / width
+      else if keepDimension == 'height'
+        width = maxArea / height
+      else # keep ratio
+        width = Math.sqrt(maxArea * ratio)
+        height = width / ratio
+
+    { width, height }
+
+
+  fitView: ({ width, height, keepDimension }) ->
+    if keepDimension == 'width'
+      height = @arenaHeight
+    else if keepDimension == 'height'
+      width = @arenaWidth
+    else
+      ratio = width / height
+      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, ratio)
+
+    { width, height }
+
+
+  centerAlign: (areaWidth, areaHeight, ratio) ->
+    if ( areaWidth / areaHeight ) > ratio
+      width = areaHeight * ratio
+      x = (areaWidth - width) / 2
+    else
+      height = areaWidth / ratio
+      y = (areaHeight - height) / 2
+
+    # return
+    x: x || 0
+    y: y || 0
+    width: width || areaWidth
+    height: height || areaHeight
 
 
   # Development helpers

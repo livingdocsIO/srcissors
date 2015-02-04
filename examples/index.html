@@ -50,7 +50,11 @@
         var crop = srcissors.new({
           arena: $('.arena'),
           view: $('.view'),
-          url: "/images/diagonal.jpg"
+          url: "/images/diagonal.jpg",
+          fixedWidth: 300,
+          minHeight: 100,
+          minRatio: 1 / 2,
+          maxRatio: 2 / 1
         });
 
         $('.icon-zoom-in').on('click', function(event) {

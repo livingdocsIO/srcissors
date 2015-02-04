@@ -1,13 +1,13 @@
 module.exports = class Events
 
-  constructor: ({ @view }) ->
-    @parent = arguments[0]
+  constructor: ({ @parent, @view, horizontal, vertical }) ->
     @doubleClickThreshold = 300
 
     @pan()
     @doubleClick()
     @preventBrowserDragDrop()
-    @resizeView()
+    @resizeView(horizontal: horizontal, vertical: vertical)
+    @responsiveArena()
 
 
   pan: ->
@@ -50,12 +50,16 @@ module.exports = class Events
   # Resize View
   # -----------
 
-  resizeView: ->
-
+  resizeView: ({ horizontal, vertical }) ->
     $template = $('<div>')
     $template.addClass('resize-handler')
 
-    positions = ['top', 'right', 'bottom', 'left']
+    positions = []
+    if horizontal
+      positions = positions.concat(['right', 'left'])
+    if vertical
+      positions = positions.concat(['top', 'bottom'])
+
     positions.forEach (position) =>
       $handler = $template.clone()
       $handler.addClass("resize-handler-#{ position }")
