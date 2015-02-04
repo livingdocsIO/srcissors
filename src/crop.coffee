@@ -3,40 +3,36 @@ Events = require('./events')
 
 module.exports = class Crop
 
-  constructor: (
-      { @arena, @view, @img, @outline, url, @fit }
-    ) ->
+  constructor: ({
+      @arena, @view, @img, @outline, url, @fit, @fixedWidth, @fixedHeight,
+      @maxAreaRatio, @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio,
+      zoomStep
+    }) ->
+
       # State
       @isPanning = false
 
       # Confguration
-      @width = undefined
-      @height = undefined
-      @ratio = undefined
-
-      @minViewWidth = 100
-      @minViewHeight = 100
-      @minViewRatio = 1 / 1.5
-      @maxViewRatio = 1.5 / 1
-
-      @fixedWidth = 300
-      @fixedHeight = undefined
-
-      @maxAreaRatio = undefined # 3 / 4 # e.g: 4 / 3 or undefined
-
-      # @zoomStep = 25%
-      @zoomInStep = 1.25 # 1.25 -> 125%
+      @zoomInStep = zoomStep
       @zoomOutStep = 1 / @zoomInStep
 
       @arenaWidth = @arena.width()
       @arenaHeight = @arena.height()
 
-      @preview = new Preview(onReady: $.proxy(this, 'onPreviewReady'), img: @img, outline: @outline)
+      @preview = new Preview
+        onReady: @onPreviewReady
+        img: @img
+        outline: @outline
+
       @preview.setImage({ url })
 
 
-  onPreviewReady: ({ width, height }) ->
-    @events = new Events(parent: this, view: @view, horizontal: !@fixedWidth, vertical: !@fixedHeight)
+  onPreviewReady: ({ width, height }) =>
+    @events = new Events
+      parent: this
+      view: @view
+      horizontal: !@fixedWidth
+      vertical: !@fixedHeight
 
     @imageWidth = width
     @imageHeight = height

@@ -39,7 +39,7 @@
   </div>
 
     <!-- jquery -->
-    <script src="//code.jquery.com/jquery-2.1.1.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
     <!-- srcissors. yeah! -->
     <script src="/srcissors.js"></script>
@@ -49,8 +49,11 @@
       $(document).ready(function() {
         var crop = srcissors.new({
           arena: $('.arena'),
-          view: $('.view'),
-          url: "/images/silser-berge.jpg"
+          url: "/images/silser-berge.jpg",
+          fit: true,
+          maxAreaRatio: 3 / 4,
+          maxRatio: 1.5 / 1,
+          minRatio: 1 / 1.5
         });
 
         $('.icon-zoom-in').on('click', function(event) {

@@ -3,38 +3,36 @@ Crop = require('./crop')
 module.exports = window.srcissors =
 
   new: ({
-    arena, view, url, fit, fixedWidth, fixedHeight, minViewWidth, minViewHeight,
-    minViewRatio, maxViewRatio, maxAreaRatio
+    arena, url, fit, fixedWidth, fixedHeight, minWidth, minHeight,
+    minRatio, maxRatio, maxAreaRatio, zoomStep
   }) ->
     arena = $(arena)
-    view = $(view)
+    view = arena.find('.view')
     img = view.find('img')
     outline = view.find('.image-outline')
     outline = undefined if not outline.length
+
+    zoomStep ?= 1.25
+
+    minWidth ?= 50
+    minHeight ?= 50
 
     if fixedWidth? || fixedHeight?
       fit = false
 
     new Crop
-      url: url
-      arena: arena
-      view: view
-      img: img
-      outline: outline
-      fit: fit
+      url: url # {String}
+      arena: arena # {jQuery Element}
+      view: view # {jQuery Element}
+      img: img # {jQuery Element}
+      outline: outline # {jQuery Element or undefined}
+      fit: fit # {Boolean}
+      fixedWidth: fixedWidth # {Number} e.g. 300
+      fixedHeight: fixedHeight # {Number} e.g. 500
+      minViewWidth: minWidth # {Number} e.g. 100
+      minViewHeight: minHeight # {Number} e.g. 100
+      minViewRatio: minRatio # {Number} e.g. 1.5/2
+      maxViewRatio: maxRatio # {Number} e.g. 2/1
+      maxAreaRatio: maxAreaRatio # {Number} 3 / 4 # e.g: 4 / 3 or undefined
+      zoomStep: zoomStep # {Number} e.g. 1.25 -> 125%
 
-
-  # configurations
-  # --------------
-  #
-  # Fixed Width or Height:
-  # fixedWidth: 300
-  # fit: false
-  # minViewWidth: 100
-  # minViewHeight: 100
-  # minViewRatio: 1 / 2
-  # maxViewRatio: 2 / 1
-  #
-  # Dynamic fit:
-  # fit: true
-  # maxAreaRatio: 3 / 4
