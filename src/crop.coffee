@@ -124,11 +124,12 @@ module.exports = class Crop
   setViewDimensions: ({ width, height, keepDimension }) ->
     if @fit
       { width, height } = @fitView({ width, height, keepDimension })
+      { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
       { width, height } = @enforceMaxArea({ width, height, keepDimension }) if @maxAreaRatio
     else if @fixedWidth || @fixedHeight
       { width, height } = @enforceFixedDimension({ width, height })
+      { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
 
-    { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
     { width, height } = @enforceViewDimensions({ width, height })
     @view.css(width: width, height: height)
     @viewWidth = width
