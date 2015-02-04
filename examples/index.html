@@ -42,19 +42,19 @@
     <script>
 
       $(document).ready(function() {
-        srcissors.setup({
+        var crop = srcissors.new({
           arena: $('.arena'),
           view: $('.view'),
           url: "/images/diagonal.jpg"
         });
 
         $('.icon-zoom-in').on('click', function(event) {
-          srcissors.zoomIn();
+          crop.zoomIn();
           event.stopPropagation();
         });
 
         $('.icon-zoom-out').on('click', function(event) {
-          srcissors.zoomOut();
+          crop.zoomOut();
           event.stopPropagation();
         });
 
