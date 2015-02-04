@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>srcissors.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!--  css -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/srcissors.css">
+  </head>
+  <body>
+
+  <div class="clip-content">
+    <div class="arena no-selection">
+      <div class="view view-hover-cursor">
+        <!-- Outline -->
+        <div class="image-outline"></div>
+
+        <!-- zoom controls -->
+        <div class="top-left">
+            <div class="zoom-controls zoom-controls-outside">
+              <a class="icon-zoom icon-zoom-in" href="#" title="Zoom in"></a>
+              <a class="icon-zoom icon-zoom-out" href="#" title="Zoom out"></a>
+            </div>
+        </div>
+
+        <!-- image -->
+        <div class="clip-content cover-all">
+          <img class="image" src="">
+        </div>
+
+        <!-- art direction -->
+        <!-- todo: display image in different size -->
+
+      </div>
+    </div>
+  </div>
+
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-2.1.1.js"></script>
+
+    <!-- srcissors. yeah! -->
+    <script src="/srcissors.js"></script>
+
+    <script>
+
+      $(document).ready(function() {
+        var crop = srcissors.new({
+          arena: $('.arena'),
+          view: $('.view'),
+          url: "/images/ghibli-tweet.png"
+        });
+
+        $('.icon-zoom-in').on('click', function(event) {
+          crop.zoomIn();
+          event.stopPropagation();
+        });
+
+        $('.icon-zoom-out').on('click', function(event) {
+          crop.zoomOut();
+          event.stopPropagation();
+        });
+
+        // Prevent triggering of other events like double click
+        $('.icon-zoom-in, .icon-zoom-out').on('mousedown', function(event) {
+          event.stopPropagation();
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

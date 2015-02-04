@@ -96,3 +96,8 @@ module.exports = class Events
 
         # only trigger panEnd if pan has been called
         @parent.onResizeEnd({ position })
+
+
+  responsiveArena: ->
+    $(window).on 'resize', (event) ->
+      console.log 'resize'
