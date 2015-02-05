@@ -125,7 +125,6 @@ module.exports = (grunt) ->
   ])
 
   grunt.registerTask('build', [
-    'clean'
     'full-test'
     'browserify:build'
     'uglify'
