@@ -373,9 +373,17 @@ module.exports = class Crop
   # -------------------
 
   debug: ->
-    arena: "#{ @arenaWidth }px :#{ @arenaHeight }px"
-    view: "#{ @viewWidth }px :#{ @viewHeight }px"
-    imgage: "#{ @imageWidth }px :#{ @imageHeight }px"
-    preview: "#{ @preview.width }px :#{ @preview.height }px"
+    r = (num) -> Math.round(num * 10) / 10
+
+    obj =
+      arena: "#{ @arenaWidth }x#{ @arenaHeight }"
+      view: "#{ @viewWidth }x#{ @viewHeight }"
+      imgage: "#{ @imageWidth }x#{ @imageHeight }"
+      preview: "#{ r @preview.width }x#{ r @preview.height }"
+      previewXy: "#{ r @preview.x }x#{ r @preview.y }"
+
+    console.log(obj)
+    return obj
+
 
 
