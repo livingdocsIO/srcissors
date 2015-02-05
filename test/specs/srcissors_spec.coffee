@@ -68,3 +68,17 @@ describe 'srcissors', ->
 
         done()
 
+
+    it 'sets a ratio', (done) ->
+      @crop.setRatio(1)
+      @crop.on 'change', (crop) =>
+        expect(crop).to.deep.equal
+          x: 50
+          y: 0
+          width: 300
+          height: 300
+
+        done()
+
+
+

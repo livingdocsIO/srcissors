@@ -5,7 +5,11 @@ module.exports = class Preview
     @width = @height = 0
 
     @img.on 'load', =>
-      @updateImageDimensions()
+      width = @img.width()
+      height = @img.height()
+      @ratio = width / height
+
+      @updateImageDimensions({ width, height })
       @onReady(width: @width, height: @height)
       @img.show()
 
@@ -16,17 +20,19 @@ module.exports = class Preview
 
   setWidth: (width) ->
     @img.css(width: "#{ width }px", height: 'auto')
-    @updateImageDimensions()
+    height = width / @ratio
+    @updateImageDimensions({ width, height })
 
 
   setHeight: (height) ->
     @img.css(width: 'auto', height: "#{ height }px")
-    @updateImageDimensions()
+    width = height * @ratio
+    @updateImageDimensions({ width, height })
 
 
-  updateImageDimensions: ->
-    @width = @img.width()
-    @height = @img.height()
+  updateImageDimensions: ({ width, height }) ->
+    @width = width
+    @height = height
     @outline.css(width: "#{ @width }px", height: "#{ @height }px") if @outline
 
 
