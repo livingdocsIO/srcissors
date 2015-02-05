@@ -8,28 +8,27 @@
 
     <!--  css -->
     <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/page.css">
     <link rel="stylesheet" href="/css/srcissors.css">
   </head>
   <body>
 
   <div class="clip-content">
-    <div class="arena no-selection">
-      <div class="view view-hover-cursor">
+    <div class="crop-arena no-selection">
+      <div class="crop-view">
         <!-- Outline -->
-        <div class="image-outline"></div>
+        <div class="crop-outline"></div>
 
         <!-- zoom controls -->
         <div class="top-left">
-            <div class="zoom-controls zoom-controls-outside">
+            <div class="crop-zoom-controls crop-zoom-controls--outside">
               <a class="icon-zoom icon-zoom-in" href="#" title="Zoom in"></a>
               <a class="icon-zoom icon-zoom-out" href="#" title="Zoom out"></a>
             </div>
         </div>
 
         <!-- image -->
-        <div class="clip-content cover-all">
-          <img class="image" src="">
-        </div>
+        <div class="crop-preview clip-content cover-all"></div>
 
         <!-- art direction -->
         <!-- todo: display image in different size -->
@@ -48,7 +47,7 @@
 
       $(document).ready(function() {
         var crop = srcissors.new({
-          arena: $('.arena'),
+          arena: $('.crop-arena'),
           url: "/images/silser-berge.jpg",
           fit: true,
           maxAreaRatio: 3 / 4,

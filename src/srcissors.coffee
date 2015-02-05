@@ -7,9 +7,11 @@ module.exports = window.srcissors =
     minRatio, maxRatio, maxAreaRatio, zoomStep
   }) ->
     arena = $(arena)
-    view = arena.find('.view')
-    img = view.find('img')
-    outline = view.find('.image-outline')
+    view = arena.find('.crop-view')
+    preview = view.find('.crop-preview')
+    img = $('<img>')
+    preview.append(img)
+    outline = view.find('.crop-outline')
     outline = undefined if not outline.length
 
     zoomStep ?= 1.25

@@ -1,8 +1,6 @@
-body {
-  background-color: #222;
-}
+/* Arena */
 
-.arena {
+.crop-arena {
   position: absolute;
   top: 0;
   right: 0;
@@ -12,7 +10,10 @@ body {
   margin: 20px 50px;
 }
 
-.view {
+
+/* View */
+
+.crop-view {
 
   /* Center */
   position: absolute;
@@ -23,22 +24,18 @@ body {
   -o-transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
   transform: translate(-50%,-50%);
+
+  cursor: all-scroll; /* IE does not support grab */
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
 }
 
-.cover-all {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.crop-view--is-loading {
+  visibility: hidden;
 }
 
-.clip-content {
-  /* Use overflow hidden instead of a background image */
-  overflow: hidden;
-}
-
-.view-hover-cursor {
+.crop-view--hover {
   /* IE does not support grab */
   cursor: all-scroll;
 
@@ -47,18 +44,35 @@ body {
   cursor: grab;
 }
 
-.view-is-panning .view,
-.view-is-panning {
+.crop-view--is-panning .crop-view,
+.crop-view--is-panning {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
 }
 
-.image {
+/* Preview */
+
+.crop-preview img {
   position: absolute;;
 
   /* prevent flickering when position is updated after the image is loaded */
   display: none;
+}
+
+/* Outline */
+
+.crop-outline {
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.crop-outline--active {
+  opacity: 1;
 }
 
 
@@ -70,7 +84,7 @@ body {
   left: 0;
 }
 
-.zoom-controls {
+.crop-zoom-controls {
   position: relative;
   margin: 10px;
 
@@ -84,13 +98,13 @@ body {
   cursor: auto;
 }
 
-.zoom-controls-outside {
+.crop-zoom-controls--outside {
   position: absolute;
   right: 0;
   margin-top: 0;
 }
 
-.zoom-controls a {
+.crop-zoom-controls a {
   display: block;
 
   width: 26px;
@@ -105,11 +119,11 @@ body {
   text-decoration: none;
 }
 
-.zoom-controls a:focus {
+.crop-zoom-controls a:focus {
   outline: none;
 }
 
-.zoom-controls a:hover {
+.crop-zoom-controls a:hover {
   background-color: #f8f8f8
 }
 
@@ -132,13 +146,6 @@ body {
   background-position: 0 -26px;
 }
 
-/* prevent user selections */
-.no-selection {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
 
 /* Resize Handlers */
 
@@ -184,17 +191,26 @@ body {
 }
 
 
-/* Outline */
-.image-outline {
+/* Helpers */
+
+.cover-all {
   position: absolute;
-
-  border: 1px solid rgba(255, 255, 255, 0.2);
-
-  opacity: 0;
-  transition: opacity 0.5s;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.image-outline-active {
-  opacity: 1;
+.clip-content {
+  /* Use overflow hidden instead of a background image */
+  overflow: hidden;
+}
+
+/* prevent user selections */
+.no-selection {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 

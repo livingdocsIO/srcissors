@@ -9,6 +9,11 @@ module.exports = class Crop
       zoomStep
     }) ->
 
+      # CSS classes
+      @loadingCssClass = 'crop-view--is-loading'
+      @panningCssClass = 'crop-view--is-panning'
+      @outlineCssClass = 'crop-outline--active'
+
       # State
       @isPanning = false
 
@@ -18,10 +23,10 @@ module.exports = class Crop
 
       # Ready
       @isReady = false
-      @view.addClass('is-loading')
+      @view.addClass(@loadingCssClass)
       this.on 'ready', =>
         @isReady = true
-        @view.removeClass('is-loading')
+        @view.removeClass(@loadingCssClass)
 
       # Confguration
       @zoomInStep = zoomStep
@@ -122,8 +127,8 @@ module.exports = class Crop
   onPan: (data) ->
     if not @isPanning
       @isPanning = true
-      @arena.addClass('view-is-panning')
-      @outline.addClass('image-outline-active')
+      @arena.addClass(@panningCssClass)
+      @outline.addClass(@outlineCssClass)
 
     newX = data.startX - data.dx
     newY = data.startY - data.dy
@@ -132,8 +137,8 @@ module.exports = class Crop
 
   onPanEnd: ->
     @isPanning = false
-    @arena.removeClass('view-is-panning')
-    @outline.removeClass('image-outline-active')
+    @arena.removeClass(@panningCssClass)
+    @outline.removeClass(@outlineCssClass)
 
 
   onDoubleClick: ({ pageX, pageY }) ->
@@ -457,9 +462,9 @@ module.exports = class Crop
     r = (num) -> Math.round(num * 10) / 10
 
     obj =
-      arena: "#{ @arenaWidth }x#{ @arenaHeight }"
-      view: "#{ @viewWidth }x#{ @viewHeight }"
-      imgage: "#{ @imageWidth }x#{ @imageHeight }"
+      arena: "#{ r @arenaWidth }x#{ r @arenaHeight }"
+      view: "#{ r @viewWidth }x#{ r @viewHeight }"
+      imgage: "#{ r @imageWidth }x#{ r @imageHeight }"
       preview: "#{ r @preview.width }x#{ r @preview.height }"
       previewXy: "#{ r @preview.x }x#{ r @preview.y }"
 
