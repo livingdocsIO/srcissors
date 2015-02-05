@@ -12,6 +12,17 @@ module.exports = class Crop
       # State
       @isPanning = false
 
+      # Events
+      @readyEvent = $.Callbacks('memory once')
+      @changeEvent = $.Callbacks()
+
+      # Ready
+      @isReady = false
+      @view.addClass('is-loading')
+      this.on 'ready', =>
+        @isReady = true
+        @view.removeClass('is-loading')
+
       # Confguration
       @zoomInStep = zoomStep
       @zoomOutStep = 1 / @zoomInStep
@@ -25,6 +36,7 @@ module.exports = class Crop
         outline: @outline
 
       @preview.setImage({ url })
+
 
 
   onPreviewReady: ({ width, height }) =>
@@ -57,6 +69,7 @@ module.exports = class Crop
     @zoomAllOut()
     @center()
 
+    @readyEvent.fire()
 
   getCrop: ->
     # calculate crop info from preview (factor in zoom!)
@@ -135,6 +148,7 @@ module.exports = class Crop
     @viewWidth = width
     @viewHeight = height
     @viewRatio = width / height
+    @fireChange()
 
 
   enforceViewDimensions: ({ width, height }) ->
@@ -189,8 +203,10 @@ module.exports = class Crop
     { width, height } = @enforceZoom({ width, height })
     if width?
       @preview.setWidth(width)
+      @fireChange()
     else if height?
       @preview.setHeight(height)
+      @fireChange()
 
     @focus(focusPoint)
 
@@ -227,6 +243,7 @@ module.exports = class Crop
   pan: (data) ->
     data = @enforceXy(data)
     @preview.pan(data.x, data.y)
+    @fireChange()
 
 
   # Validations
@@ -367,6 +384,28 @@ module.exports = class Crop
     y: y || 0
     width: width || areaWidth
     height: height || areaHeight
+
+
+  # Events
+  # ------
+
+  on: (name, callback) ->
+    this["#{ name }Event"].add(callback)
+
+
+  off: (name, callback) ->
+    this["#{ name }Event"].remove(callback)
+
+
+  # Debounce change events so they are not fired more
+  # than once per tick.
+  fireChange: ->
+    return if @changeDispatch?
+
+    @changeDispatch = setTimeout =>
+      @changeDispatch = undefined
+      @changeEvent.fire(@getCrop())
+    , 0
 
 
   # Development helpers
