@@ -49,7 +49,9 @@
       $(document).ready(function() {
         var crop = srcissors.new({
           arena: $('.arena'),
-          url: "/images/ghibli-tweet.png"
+          url: "/images/ghibli-tweet.png",
+          minWidth: 300,
+          minHeight: 60
         });
 
         $('.icon-zoom-in').on('click', function(event) {
