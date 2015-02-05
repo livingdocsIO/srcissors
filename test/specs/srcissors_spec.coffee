@@ -1,15 +1,11 @@
 srcissors = require('../../src/srcissors')
 
 template = """
-  <div class="arena">
-    <div class="view">
-      <!-- Outline -->
-      <div class="image-outline"></div>
+  <div class="crop-arena">
+    <div class="crop-view">
 
       <!-- image -->
-      <div class="clip-content cover-all">
-        <img class="image" src="">
-      </div>
+      <div class="crop-preview"></div>
 
     </div>
   </div>
