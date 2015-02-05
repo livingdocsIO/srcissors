@@ -118,10 +118,15 @@ module.exports = (grunt) ->
     'karma:unit'
   ])
 
-  grunt.registerTask('build', [
-    'clean'
+  grunt.registerTask('full-test', [
+    'clean:tmp'
     'browserify:test'
     'karma:build'
+  ])
+
+  grunt.registerTask('build', [
+    'clean'
+    'full-test'
     'browserify:build'
     'uglify'
   ])
