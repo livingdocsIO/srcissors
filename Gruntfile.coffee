@@ -113,7 +113,6 @@ module.exports = (grunt) ->
   ])
 
   grunt.registerTask('test', [
-    'clean:tmp'
     'browserify:test'
     'karma:unit'
   ])

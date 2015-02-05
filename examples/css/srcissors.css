@@ -35,15 +35,6 @@
   visibility: hidden;
 }
 
-.crop-view--hover {
-  /* IE does not support grab */
-  cursor: all-scroll;
-
-  cursor: -webkit-grab;
-  cursor: -moz-grab;
-  cursor: grab;
-}
-
 .crop-view--is-panning .crop-view,
 .crop-view--is-panning {
   cursor: -webkit-grabbing;

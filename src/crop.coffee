@@ -90,7 +90,6 @@ module.exports = class Crop
 
     @zoom(width: previewWidth)
     @pan({ x: x * factor, y: y * factor })
-    @debug()
 
 
   getCrop: ->
