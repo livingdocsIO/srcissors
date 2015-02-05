@@ -17,7 +17,7 @@ module.exports = (grunt) ->
 
     connect:
       options:
-        port: 9010
+        port: 9040
         # Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost'
         livereload: 35749 # Default livereload listening port: 35729
@@ -115,15 +115,10 @@ module.exports = (grunt) ->
     'karma:unit'
   ])
 
-  grunt.registerTask('node-test', [
-    'mochaTest'
-  ])
-
   grunt.registerTask('build', [
     'clean'
     'browserify:test'
     'karma:build'
-    'mochaTest'
     'browserify:build'
     'uglify'
   ])
