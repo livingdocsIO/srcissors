@@ -99,5 +99,6 @@ module.exports = class Events
 
 
   responsiveArena: ->
-    $(window).on 'resize', (event) ->
-      console.log 'resize'
+    # $(window).on 'resize', (event) ->
+    #   console.log 'on window resize'
+

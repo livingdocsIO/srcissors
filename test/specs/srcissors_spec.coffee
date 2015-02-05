@@ -1,8 +1,74 @@
 srcissors = require('../../src/srcissors')
 
+template = """
+  <div class="arena">
+    <div class="view">
+      <!-- Outline -->
+      <div class="image-outline"></div>
+
+      <!-- image -->
+      <div class="clip-content cover-all">
+        <img class="image" src="">
+      </div>
+
+    </div>
+  </div>
+  """
+
 describe 'srcissors', ->
 
-  it 'todo', ->
-    expect(false).to.equal(true)
+  it 'creates a new instance', ->
+    html = $(template)
+    crop = srcissors.new
+      arena: html
 
+    expect(crop).to.exist
+
+
+  describe 'with a minimal instance', ->
+
+    beforeEach (done) ->
+      @arena = $(template)
+      @arena.css(width: 100, height: 100)
+      $(document.body).append(@arena)
+
+      @crop = srcissors.new
+        arena: @arena
+        url: 'base/test/images/diagonal.jpg'
+        fit: true
+      @crop.on 'ready', done
+
+
+    afterEach ->
+      @arena.remove()
+
+
+    it 'has initialized the image correctly', ->
+      expect(@crop.imageWidth).to.equal(400)
+      expect(@crop.imageHeight).to.equal(300)
+
+
+    it 'fires a change event after ready', (done) ->
+      @crop.on 'change', (crop) ->
+        expect(crop).to.deep.equal
+          x: 0
+          y: 0
+          width: 400
+          height: 300
+
+        done()
+
+
+    # Zoom a 400x300 image by factor 2 in an arena of 100x100
+    # The view should keep the images aspect ratio and have a size of 100x75
+    it 'zooms 2x into the center', (done) ->
+      @crop.zoom(width: 200)
+      @crop.on 'change', (crop) =>
+        expect(crop).to.deep.equal
+          x: 100
+          y: 75
+          width: 200
+          height: 150
+
+        done()
 

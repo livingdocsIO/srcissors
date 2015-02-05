@@ -9,7 +9,9 @@ module.exports = (config) ->
 
     # list of files / patterns to load in the browser
     files: [
+      'node_modules/jquery/dist/jquery.js'
       '.tmp/srcissors-test.js'
+      { pattern: './test/**/*', included: false }
     ],
 
     # list of files / patterns to exclude
