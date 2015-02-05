@@ -81,7 +81,10 @@ module.exports = (grunt) ->
         browsers: ['Chrome', 'Firefox', 'Safari']
         singleRun: true
 
+    # note: run grunt uglify --verbose to see the file size report
     uglify:
+      options:
+        report: 'gzip'
       dist:
         files:
           'srcissors.min.js': [
