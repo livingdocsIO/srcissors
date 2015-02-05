@@ -55,6 +55,13 @@
           maxRatio: 1.5 / 1
         });
 
+        crop.setCrop({
+          x: 1096,
+          y: 461,
+          width: 700,
+          height: 500
+        })
+
         $('.icon-zoom-in').on('click', function(event) {
           crop.zoomIn();
           event.stopPropagation();

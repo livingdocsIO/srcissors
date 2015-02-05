@@ -71,8 +71,49 @@ module.exports = class Crop
 
     @readyEvent.fire()
 
+
+  setCrop: ({ x, y, width, height }) ->
+    if not @isReady
+      this.on 'ready', =>
+        @setCrop({ x, y, width, height })
+      return
+
+    @resize({ width, height, force: true }) # just call fitview -> implement force
+
+    factor = @viewWidth / width
+    previewWidth = @imageWidth * factor
+
+    @zoom(width: previewWidth)
+    @pan({ x: x * factor, y: y * factor })
+    @debug()
+
+
   getCrop: ->
-    # calculate crop info from preview (factor in zoom!)
+    factor =  @preview.width / @imageWidth
+    crop =
+      x: @preview.x / factor
+      y: @preview.y / factor
+      width: @viewWidth / factor
+      height: @viewHeight / factor
+
+    @roundCrop(crop)
+    @validateCrop(crop)
+    crop
+
+
+  roundCrop: (crop) ->
+    for name, value of crop
+      crop[name] = Math.round(value)
+
+
+  validateCrop: (crop) ->
+    { x, y, width, height } = crop
+    if x + width > @imageWidth
+      crop.width = @imageWidth - x
+    else if y + height > @imageHeight
+      crop.height = @imageHeight - y
+
+    crop
 
 
   # Event handling
@@ -124,8 +165,9 @@ module.exports = class Crop
     @setViewDimensions({ width, height, keepDimension })
 
     # Update view center of focus point
-    @resizeFocusPoint.viewX = @viewWidth / 2
-    @resizeFocusPoint.viewY = @viewHeight / 2
+    if @resizeFocusPoint
+      @resizeFocusPoint.viewX = @viewWidth / 2
+      @resizeFocusPoint.viewY = @viewHeight / 2
 
     # Ensure dimensions and focus
     @zoom
