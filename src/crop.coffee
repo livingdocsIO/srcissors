@@ -5,8 +5,8 @@ module.exports = class Crop
 
   constructor: ({
       @arena, @view, @img, @outline, url, @fit, @fixedWidth, @fixedHeight,
-      @maxAreaRatio, @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio,
-      zoomStep
+      @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio,
+      zoomStep, maxArea
     }) ->
 
       # CSS classes
@@ -35,13 +35,17 @@ module.exports = class Crop
       @arenaWidth = @arena.width()
       @arenaHeight = @arena.height()
 
+      # todo: consider to calculate maxArea with regards to the
+      # maximum space an image can within the area. That should
+      # be more reliable.
+      @maxArea = (@arenaWidth * @arenaHeight) * maxArea if maxArea
+
       @preview = new Preview
         onReady: @onPreviewReady
         img: @img
         outline: @outline
 
       @preview.setImage({ url })
-
 
 
   onPreviewReady: ({ width, height }) =>
@@ -195,7 +199,7 @@ module.exports = class Crop
     if @fit
       { width, height } = @fitView({ width, height, keepDimension })
       { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
-      { width, height } = @enforceMaxArea({ width, height, keepDimension }) if @maxAreaRatio
+      { width, height } = @enforceMaxArea({ width, height, keepDimension }) if @maxArea
     else if @fixedWidth || @fixedHeight
       { width, height } = @enforceFixedDimension({ width, height })
       { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
@@ -351,18 +355,25 @@ module.exports = class Crop
     @viewRatio >= @imageRatio
 
 
-  calculateMaxArea: ->
-    if @maxAreaRatio
-      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @maxAreaRatio)
-      maxArea = width * height
-      return maxArea
-
-
   enforceFixedDimension: ({ width, height, keepDimension }) ->
     if @fixedWidth
       { width, height } = @getRatioBox(ratio: width / height, width: @fixedWidth)
     else if @fixedHeight
       { width, height } = @getRatioBox(ratio: width / height, height: @fixedHeight)
+
+    { width, height }
+
+
+  enforceMaxArea: ({ width, height, keepDimension }) ->
+    ratio = width / height
+    if @maxArea && width * height > @maxArea
+      if keepDimension == 'width'
+        height = @maxArea / width
+      else if keepDimension == 'height'
+        width = @maxArea / height
+      else # keep ratio
+        width = Math.sqrt(@maxArea * ratio)
+        height = width / ratio
 
     { width, height }
 
@@ -398,21 +409,6 @@ module.exports = class Crop
       width = height * ratio
     else
       width = height * ratio
-
-    { width, height }
-
-
-  enforceMaxArea: ({ width, height, keepDimension }) ->
-    ratio = width / height
-    maxArea = @calculateMaxArea()
-    if maxArea && width * height > maxArea
-      if keepDimension == 'width'
-        height = maxArea / width
-      else if keepDimension == 'height'
-        width = maxArea / height
-      else # keep ratio
-        width = Math.sqrt(maxArea * ratio)
-        height = width / ratio
 
     { width, height }
 
