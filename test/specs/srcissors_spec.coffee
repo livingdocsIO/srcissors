@@ -32,7 +32,6 @@ describe 'srcissors', ->
       @crop = srcissors.new
         arena: @arena
         url: 'base/test/images/diagonal.jpg'
-        fit: true
       @crop.on 'ready', done
 
 
@@ -97,7 +96,6 @@ describe 'srcissors', ->
       @crop = srcissors.new
         arena: @arena
         url: 'base/test/images/diagonal.jpg'
-        fit: true
       @crop.on 'ready', done
 
 
@@ -115,7 +113,6 @@ describe 'srcissors', ->
       it 'sets a square ratio', (done) ->
         @crop.setRatio(1)
         @crop.on 'change', (crop) =>
-          @crop.debug()
           expect(crop).to.deep.equal
             x: 50
             y: 0

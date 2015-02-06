@@ -59,20 +59,13 @@ module.exports = class Crop
     @imageHeight = height
     @imageRatio = @imageWidth / @imageHeight
 
-    @width = @imageWidth if not @width
-    @height = @imageHeight if not @height
+    @calcMaxMinDimensions()
 
-    keepDimension = undefined
-    if @fixedWidth
-      @width = @fixedWidth
-      keepDimension = 'width'
-    if @fixedHeight
-      @height = @fixedHeight
-      keepDimension = 'height'
-
+    keepDimension = 'width' if @fixedWidth
+    keepDimension = 'height' if @fixedHeight
     @setViewDimensions
-      width: @width
-      height: @height
+      width: @imageWidth
+      height: @imageHeight
       keepDimension: keepDimension
 
     @zoomAllOut()
@@ -87,7 +80,7 @@ module.exports = class Crop
         @setCrop({ x, y, width, height })
       return
 
-    @resize({ width, height, force: true }) # just call fitview -> implement force
+    @resize({ width, height })
 
     factor = @viewWidth / width
     previewWidth = @imageWidth * factor
@@ -125,8 +118,7 @@ module.exports = class Crop
 
 
   setRatio: (ratio, keepDimension) ->
-    ratio = @minViewRatio if ratio < @minViewRatio
-    ratio = @maxViewRatio if ratio > @maxViewRatio
+    ratio = @enforceValidRatio(ratio)
 
     if keepDimension == 'height'
       height = @viewHeight
@@ -200,15 +192,10 @@ module.exports = class Crop
 
 
   setViewDimensions: ({ width, height, keepDimension }) ->
-    if @fit
-      { width, height } = @fitView({ width, height, keepDimension })
-      { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
-      { width, height } = @enforceMaxArea({ width, height, keepDimension }) if @maxArea
-    else if @fixedWidth || @fixedHeight
-      { width, height } = @enforceFixedDimension({ width, height })
-      { width, height } = @enforceMaxMinRatio({ width, height, keepDimension })
+    if @maxArea
+      { width, height } = @enforceMaxArea({ width, height, keepDimension })
 
-    { width, height } = @enforceViewDimensions({ width, height })
+    { width, height } = @enforceViewDimensions({ width, height, keepDimension })
 
     @view.css(width: width, height: height)
     @viewWidth = width
@@ -297,24 +284,6 @@ module.exports = class Crop
   # Validations
   # -----------
 
-  enforceViewDimensions: ({ width, height }) ->
-    if width < @minViewWidth
-      width = @minViewWidth
-    else if width > @imageWidth
-      width = @imageWidth
-    else if width > @arenaWidth
-      width = @arenaWidth
-
-    if height < @minViewHeight
-      height = @minViewHeight
-    else if height > @imageHeight
-      height = @imageHeight
-    else if height > @arenaHeight
-      height = @arenaHeight
-
-    { width, height }
-
-
   enforceXy: ({ x, y }) ->
     if x < 0
       x = 0
@@ -346,61 +315,81 @@ module.exports = class Crop
     { width, height }
 
 
-  enforceFixedDimension: ({ width, height, keepDimension }) ->
-    if @fixedWidth
-      { width, height } = @getRatioBox(ratio: width / height, width: @fixedWidth)
-    else if @fixedHeight
-      { width, height } = @getRatioBox(ratio: width / height, height: @fixedHeight)
+  calcMaxMinDimensions: ->
+    @maxWidth = @min([@arenaWidth, @imageWidth])
+    @maxHeight = @min([@arenaHeight, @imageHeight])
+    @minWidth = @minViewWidth || 0
+    @minHeight = @minViewHeight || 0
 
-    { width, height }
+    @maxWidth = @minWidth = @fixedWidth if @fixedWidth
+    @maxHeight = @minHeight = @fixedHeight if @fixedHeight
 
 
-  fitView: ({ width, height, keepDimension }) ->
-    if keepDimension == 'width'
-      height = @arenaHeight
-    else if keepDimension == 'height'
-      width = @arenaWidth
-    else
+  areDimensionsValid: ({ width, height, keepDimension }) ->
+    ratio = width / height
+
+    invalid =
+      width < @minWidth ||
+      width > @maxWidth ||
+      height < @minHeight ||
+      height > @maxHeight ||
+      ratio < @minViewRatio ||
+      ratio > @maxViewRatio
+
+    not invalid
+
+
+  isValidRatio: (ratio) ->
+    not (ratio < @minViewRatio || ratio > @maxViewRatio)
+
+
+  enforceValidRatio: (ratio) ->
+    return @minViewRatio if ratio < @minViewRatio
+    return @maxViewRatio if ratio > @maxViewRatio
+    ratio
+
+
+  enforceViewDimensions: ({ width, height, keepDimension }) ->
+    newWidth = @minWidth if width < @minWidth
+    newWidth = @maxWidth if width > @maxWidth
+    newHeight = @minHeight if height < @minHeight
+    newHeight = @maxHeight if height > @maxHeight
+
+    if keepDimension
+      width = newWidth if newWidth
+      height = newHeight if newHeight
+
+      # check max/min ratios
       ratio = width / height
-      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, ratio)
+      if not @isValidRatio(ratio)
+        ratio = @enforceValidRatio(ratio)
+        { width, height } = @getRatioBox({ ratio: ratio, width, height, keepDimension })
+        { width, height } = @centerAlign(@maxWidth, @maxHeight, ratio)
+
+    else if newWidth || newHeight
+      ratio = @enforceValidRatio(width / height)
+      { width, height } = @centerAlign(@maxWidth, @maxHeight, ratio)
 
     { width, height }
 
 
   enforceMaxArea: ({ width, height, keepDimension }) ->
     ratio = width / height
-    if @maxArea && width * height > @maxArea
-      if keepDimension == 'width'
-        height = @maxArea / width
-      else if keepDimension == 'height'
-        width = @maxArea / height
-      else # keep ratio
-        width = Math.sqrt(@maxArea * ratio)
-        height = width / ratio
 
-    { width, height }
+    if keepDimension == 'width'
+      height = @maxArea / width
+      ratio = width / height
+    else if keepDimension == 'height'
+      width = @maxArea / height
+      ratio = width / height
+    else # keep ratio
+      width = Math.sqrt(@maxArea * ratio)
+      height = width / ratio
 
-
-  enforceMaxMinRatio: ({ width, height, keepDimension }) ->
-    ratio = width / height
-    if @minViewRatio && ratio < @minViewRatio
-      if @fixedWidth
-        { width, height } = @getRatioBox(ratio: @minViewRatio, width: @fixedWidth)
-      else if @fixedHeight
-        { width, height } = @getRatioBox(ratio: @minViewRatio, height: @fixedHeight)
-      else if @fit
-        { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @minViewRatio)
-      else
-        { width, height } = @getRatioBox({ ratio: @minViewRatio, width, height, keepDimension })
-    else if @maxViewRatio && ratio > @maxViewRatio
-      if @fixedWidth
-        { width, height } = @getRatioBox(ratio: @maxViewRatio, width: @fixedWidth)
-      else if @fixedHeight
-        { width, height } = @getRatioBox(ratio: @maxViewRatio, height: @fixedHeight)
-      else if @fit
-        { width, height } = @centerAlign(@arenaWidth, @arenaHeight, @maxViewRatio)
-      else
-        { width, height } = @getRatioBox({ ratio: @maxViewRatio, width, height, keepDimension })
+    if not @isValidRatio(ratio)
+      ratio = @enforceValidRatio(ratio)
+      width = Math.sqrt(@maxArea * ratio)
+      height = width / ratio
 
     { width, height }
 
@@ -424,7 +413,7 @@ module.exports = class Crop
     else if keepDimension == 'height' || not width?
       width = height * ratio
     else
-      width = height * ratio
+      height = width / ratio
 
     { width, height }
 
@@ -442,6 +431,14 @@ module.exports = class Crop
     y: y || 0
     width: width || areaWidth
     height: height || areaHeight
+
+
+  min: (array) ->
+    min = array[0]
+    for number in array
+      min = number if number < min
+
+    return min
 
 
   # Events
