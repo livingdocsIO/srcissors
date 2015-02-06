@@ -214,24 +214,6 @@ module.exports = class Crop
     @fireChange()
 
 
-  enforceViewDimensions: ({ width, height }) ->
-    if width < @minViewWidth
-      width = @minViewWidth
-    else if width > @imageWidth
-      width = @imageWidth
-    else if width > @arenaWidth
-      width = @arenaWidth
-
-    if height < @minViewHeight
-      height = @minViewHeight
-    else if height > @imageHeight
-      height = @imageHeight
-    else if height > @arenaHeight
-      height = @arenaHeight
-
-    { width, height }
-
-
   # Update view
   # -----------
 
@@ -312,6 +294,24 @@ module.exports = class Crop
   # Validations
   # -----------
 
+  enforceViewDimensions: ({ width, height }) ->
+    if width < @minViewWidth
+      width = @minViewWidth
+    else if width > @imageWidth
+      width = @imageWidth
+    else if width > @arenaWidth
+      width = @arenaWidth
+
+    if height < @minViewHeight
+      height = @minViewHeight
+    else if height > @imageHeight
+      height = @imageHeight
+    else if height > @arenaHeight
+      height = @arenaHeight
+
+    { width, height }
+
+
   enforceXy: ({ x, y }) ->
     if x < 0
       x = 0
@@ -343,24 +343,23 @@ module.exports = class Crop
     { width, height }
 
 
-  # Calculations
-  # ------------
-  #
-  # Ratio: width / height
-  # Tall < 1 (Square) < Wide
-  # (A ratio less than one is a tall image format and
-  #  a ratio greater than one is a wide image format)
-
-  # Check if the width or height is restricting
-  isWidthRestricting: ->
-    @viewRatio >= @imageRatio
-
-
   enforceFixedDimension: ({ width, height, keepDimension }) ->
     if @fixedWidth
       { width, height } = @getRatioBox(ratio: width / height, width: @fixedWidth)
     else if @fixedHeight
       { width, height } = @getRatioBox(ratio: width / height, height: @fixedHeight)
+
+    { width, height }
+
+
+  fitView: ({ width, height, keepDimension }) ->
+    if keepDimension == 'width'
+      height = @arenaHeight
+    else if keepDimension == 'height'
+      width = @arenaWidth
+    else
+      ratio = width / height
+      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, ratio)
 
     { width, height }
 
@@ -403,6 +402,19 @@ module.exports = class Crop
     { width, height }
 
 
+  # Calculations
+  # ------------
+  #
+  # Ratio: width / height
+  # Tall < 1 (Square) < Wide
+  # (A ratio less than one is a tall image format and
+  #  a ratio greater than one is a wide image format)
+
+  # Check if the width or height is restricting
+  isWidthRestricting: ->
+    @viewRatio >= @imageRatio
+
+
   getRatioBox: ({ ratio, width, height, keepDimension }) ->
     if keepDimension == 'width' || not height?
       height = width / ratio
@@ -410,18 +422,6 @@ module.exports = class Crop
       width = height * ratio
     else
       width = height * ratio
-
-    { width, height }
-
-
-  fitView: ({ width, height, keepDimension }) ->
-    if keepDimension == 'width'
-      height = @arenaHeight
-    else if keepDimension == 'height'
-      width = @arenaWidth
-    else
-      ratio = width / height
-      { width, height } = @centerAlign(@arenaWidth, @arenaHeight, ratio)
 
     { width, height }
 
@@ -472,7 +472,7 @@ module.exports = class Crop
     obj =
       arena: "#{ r @arenaWidth }x#{ r @arenaHeight }"
       view: "#{ r @viewWidth }x#{ r @viewHeight }"
-      imgage: "#{ r @imageWidth }x#{ r @imageHeight }"
+      image: "#{ r @imageWidth }x#{ r @imageHeight }"
       preview: "#{ r @preview.width }x#{ r @preview.height }"
       previewXy: "#{ r @preview.x }x#{ r @preview.y }"
 
