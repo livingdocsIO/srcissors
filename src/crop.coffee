@@ -132,6 +132,7 @@ module.exports = class Crop
       width = @viewWidth
       height = width / ratio
 
+    @resizeFocusPoint = @getFocusPoint()
     @resize({ width, height })
 
 
