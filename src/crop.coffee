@@ -125,6 +125,9 @@ module.exports = class Crop
 
 
   setRatio: (ratio, keepDimension) ->
+    ratio = @minViewRatio if ratio < @minViewRatio
+    ratio = @maxViewRatio if ratio > @maxViewRatio
+
     if keepDimension == 'height'
       height = @viewHeight
       width = height * ratio
