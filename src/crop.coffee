@@ -118,6 +118,11 @@ module.exports = class Crop
 
 
   setRatio: (ratio, keepDimension) ->
+    if not @isReady
+      this.on 'ready', =>
+        @setRatio({ ratio, keepDimension })
+      return
+
     ratio = @enforceValidRatio(ratio)
 
     if keepDimension == 'height'
