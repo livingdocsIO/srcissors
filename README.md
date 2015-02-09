@@ -63,7 +63,7 @@ cropper.on('change', function(crop) {
 
 This is the basic HTML used by srcissors in the examples. The zoom controls are not needed by the script and you need create the click events for zooming yourself. Have a look at how it can be done in `examples/index.html`.
 
-There are also more setups for you to look at in `examples/fit-to-are-html` and `examples/small-image.html`.
+There are also more setups for you to look at in `examples/fit-to-area.html` and `examples/small-image.html`.
 
 ```html
 <div class="crop-arena">
@@ -105,3 +105,16 @@ grunt test
 grunt build
 ```
 
+
+---
+---
+---
+
+#### Licence
+
+Copyright (c) 2015 upfront GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License (LGPL) as
+published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
