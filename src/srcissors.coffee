@@ -3,7 +3,7 @@ Crop = require('./crop')
 module.exports = window.srcissors =
 
   new: ({
-    arena, url, fit, fixedWidth, fixedHeight, minWidth, minHeight,
+    arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
     minRatio, maxRatio, maxArea, zoomStep, crop
   }) ->
     arena = $(arena)
@@ -19,9 +19,6 @@ module.exports = window.srcissors =
     minWidth ?= 50
     minHeight ?= 50
 
-    if fixedWidth? || fixedHeight?
-      fit = false
-
     new Crop
       url: url # {String}
       crop: crop # {Object} Set an inital crop. This is the same as calling setCrop()
@@ -29,7 +26,6 @@ module.exports = window.srcissors =
       view: view # {jQuery Element}
       img: img # {jQuery Element}
       outline: outline # {jQuery Element or undefined}
-      fit: fit # {Boolean}
       fixedWidth: fixedWidth # {Number} e.g. 300
       fixedHeight: fixedHeight # {Number} e.g. 500
       minViewWidth: minWidth # {Number} e.g. 100

@@ -4,7 +4,7 @@ Events = require('./events')
 module.exports = class Crop
 
   constructor: ({
-      @arena, @view, @img, @outline, url, @fit, @fixedWidth, @fixedHeight,
+      @arena, @view, @img, @outline, url, @fixedWidth, @fixedHeight,
       @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio, crop
       zoomStep, maxArea
     }) ->
