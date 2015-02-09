@@ -31,8 +31,41 @@
   cursor: grab;
 }
 
-.crop-view--is-loading {
-  visibility: hidden;
+
+.crop-view--is-loading .crop-zoom-controls,
+.crop-view--is-loading .crop-outline {
+    visibility: hidden;
+}
+
+.crop-view--is-loading:before {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+
+  background-color: rgba(0, 0, 0, .75);
+
+  content: '';
+
+  z-index: 100;
+}
+
+.crop-view--is-loading:after {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+
+  width: 50px;
+  height: 50px;
+
+  background: transparent url('/assets/spinner.svg') center center no-repeat;
+
+  background-size: cover;
+
+  content: '';
+  transform: translate(-50%, -50%);
+  z-index: 101;
 }
 
 .crop-view--is-panning .crop-view,
