@@ -4,5 +4,13 @@
   "homepage": "https://github.com/upfrontIO/srcissors",
   "description": "Image cropping for responsive images",
   "author": "upfront.io",
-  "license": "LGPL-3.0+"
+  "license": "LGPL-3.0+",
+  "ignore": [
+    "**/**",
+    "!README.*",
+    "!Changelog.*",
+    "!LICENSE",
+    "!LGPL",
+    "!srcissors.*"
+  ],
 }
