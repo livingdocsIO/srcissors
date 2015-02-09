@@ -1,6 +1,6 @@
 {
   "name": "scrissors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/upfrontIO/scrissors",
   "description": "Image cropping for responsive images",
   "author": "upfront.io",
