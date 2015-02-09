@@ -49,9 +49,10 @@ cropper.on('change', function(crop) {
 ### Configuration Options
 
 | Parameter | Type |  |
-|---------------|-----------|--------------------------------|
+|---------------|-------------|--------------------------------|
 | `arena` | jQuery element |  |
 | `url` | String | Url of the image to load |
+| `crop` | Object {x, y, width, height} | Initial crop. The same as calling `setCrop()` |
 | `fixedWidth`, `fixedHeight` | Number | Will fix the preview width and only allow for resizes in the other axis. |
 | `minWidth`, `minHeight` | Number | Minimum widht or height the preview can be. |
 | `minRatio`, `maxRatio` |  Number | Prohibit extreme image ratios with these settings. |

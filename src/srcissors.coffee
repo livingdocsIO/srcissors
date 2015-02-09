@@ -4,7 +4,7 @@ module.exports = window.srcissors =
 
   new: ({
     arena, url, fit, fixedWidth, fixedHeight, minWidth, minHeight,
-    minRatio, maxRatio, maxArea, zoomStep
+    minRatio, maxRatio, maxArea, zoomStep, crop
   }) ->
     arena = $(arena)
     view = arena.find('.crop-view')
@@ -24,6 +24,7 @@ module.exports = window.srcissors =
 
     new Crop
       url: url # {String}
+      crop: crop # {Object} Set an inital crop. This is the same as calling setCrop()
       arena: arena # {jQuery Element}
       view: view # {jQuery Element}
       img: img # {jQuery Element}

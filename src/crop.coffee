@@ -5,7 +5,7 @@ module.exports = class Crop
 
   constructor: ({
       @arena, @view, @img, @outline, url, @fit, @fixedWidth, @fixedHeight,
-      @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio,
+      @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio, crop
       zoomStep, maxArea
     }) ->
 
@@ -16,6 +16,7 @@ module.exports = class Crop
 
       # State
       @isPanning = false
+      @initialCrop = crop
 
       # Events
       @readyEvent = $.Callbacks('memory once')
@@ -68,10 +69,14 @@ module.exports = class Crop
       height: @imageHeight
       keepDimension: keepDimension
 
-    @zoomAllOut()
-    @center()
-
     @readyEvent.fire()
+
+    if @initialCrop?
+      @setCrop(@initialCrop)
+    else
+      @zoomAllOut()
+      @center()
+
 
 
   setCrop: ({ x, y, width, height }) ->
