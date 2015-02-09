@@ -129,6 +129,11 @@ module.exports = (grunt) ->
     'uglify'
   ])
 
+  grunt.registerTask('quickbuild', [
+    'browserify:build'
+    'uglify'
+  ])
+
   # Release a new version
   # Only do this on the `master` branch.
   #
