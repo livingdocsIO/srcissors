@@ -13,4 +13,5 @@
     "!LGPL",
     "!srcissors.*"
   ],
+  "main": "srcissors.js"
 }

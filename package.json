@@ -13,7 +13,8 @@
     "type": "git",
     "url": "git://github.com/upfrontIO/scrissors.git"
   },
-  "main": "lib/scrissors.js",
+  "browser": "src/scrissors.coffee",
+  "main": "src/scrissors.coffee",
   "devDependencies": {
     "browserify": "^6.2.0",
     "chai": "^1.9.2",
