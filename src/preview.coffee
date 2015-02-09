@@ -36,11 +36,11 @@ module.exports = class Preview
     @outline.css(width: "#{ @width }px", height: "#{ @height }px") if @outline
 
 
-  pan: (x, y) ->
+  pan: (@x, @y) ->
     # Without rounding some numbers would not be set to css.
     # e.g: '-5.14957320384e-14'
-    @x = Math.round(x)
-    @y = Math.round(y)
-    @img.css(transform: "translate(-#{ @x }px, -#{ @y }px)")
-    @outline.css(transform: "translate(-#{ @x }px, -#{ @y }px)") if @outline
+    x = Math.round(@x)
+    y = Math.round(@y)
+    @img.css(transform: "translate(-#{ x }px, -#{ y }px)")
+    @outline.css(transform: "translate(-#{ x }px, -#{ y }px)") if @outline
 
