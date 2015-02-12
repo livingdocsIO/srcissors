@@ -20,6 +20,7 @@ module.exports = class Crop
 
       # Events
       @readyEvent = $.Callbacks('memory once')
+      @loadEvent = $.Callbacks()
       @changeEvent = $.Callbacks()
 
       # Confguration
@@ -83,6 +84,7 @@ module.exports = class Crop
 
     @isInitialized = true
     @readyEvent.fire()
+    @loadEvent.fire()
 
 
   setCrop: ({ x, y, width, height }) ->

@@ -82,6 +82,14 @@
           event.preventDefault();
         });
 
+        crop.on('ready', function() {
+          console.log('ready event fired');
+        });
+
+        crop.on('load', function() {
+          console.log('load event fired');
+        });
+
       });
 
     </script>
