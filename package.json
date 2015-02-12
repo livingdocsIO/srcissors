@@ -1,6 +1,6 @@
 {
   "name": "srcissors",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/upfrontIO/srcissors",
   "description": "Image cropping for responsive images",
   "author": "upfront.io",
