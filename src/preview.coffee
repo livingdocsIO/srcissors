@@ -18,6 +18,14 @@ module.exports = class Preview
     @img.attr('src', url)
 
 
+  reset: ->
+    @x = @y = 0
+    @width = @height = 0
+    @img.attr('src', '')
+    @img.css(width: '', height: '', transform: '')
+    @outline.css(transform: '') if @outline
+
+
   setWidth: (width) ->
     @img.css(width: "#{ width }px", height: 'auto')
     height = width / @ratio
