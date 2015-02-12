@@ -17,15 +17,8 @@ module.exports = Crop = (function() {
     this.isPanning = false;
     this.initialCrop = crop;
     this.readyEvent = $.Callbacks('memory once');
+    this.loadEvent = $.Callbacks();
     this.changeEvent = $.Callbacks();
-    this.isReady = false;
-    this.view.addClass(this.loadingCssClass);
-    this.on('ready', (function(_this) {
-      return function() {
-        _this.isReady = true;
-        return _this.view.removeClass(_this.loadingCssClass);
-      };
-    })(this));
     this.zoomInStep = zoomStep;
     this.zoomOutStep = 1 / this.zoomInStep;
     this.arenaWidth = this.arena.width();
@@ -38,19 +31,33 @@ module.exports = Crop = (function() {
       img: this.img,
       outline: this.outline
     });
-    this.preview.setImage({
+    this.setImage(url);
+  }
+
+  Crop.prototype.setImage = function(url) {
+    if (url === this.preview.url) {
+      return;
+    }
+    if (this.isInitialized) {
+      this.preview.reset();
+    }
+    this.isReady = false;
+    this.view.addClass(this.loadingCssClass);
+    return this.preview.setImage({
       url: url
     });
-  }
+  };
 
   Crop.prototype.onPreviewReady = function(_arg) {
     var height, keepDimension, width;
     width = _arg.width, height = _arg.height;
-    this.events = new Events({
-      parent: this,
-      view: this.view,
-      actions: this.actions
-    });
+    if (!this.isInitialized) {
+      this.events = new Events({
+        parent: this,
+        view: this.view,
+        actions: this.actions
+      });
+    }
     this.imageWidth = width;
     this.imageHeight = height;
     this.imageRatio = this.imageWidth / this.imageHeight;
@@ -66,13 +73,17 @@ module.exports = Crop = (function() {
       height: this.imageHeight,
       keepDimension: keepDimension
     });
-    this.readyEvent.fire();
-    if (this.initialCrop != null) {
-      return this.setCrop(this.initialCrop);
+    this.isReady = true;
+    this.view.removeClass(this.loadingCssClass);
+    if (!this.isInitialized && (this.initialCrop != null)) {
+      this.setCrop(this.initialCrop);
     } else {
       this.zoomAllOut();
-      return this.center();
+      this.center();
     }
+    this.isInitialized = true;
+    this.readyEvent.fire();
+    return this.loadEvent.fire();
   };
 
   Crop.prototype.setCrop = function(_arg) {
@@ -807,9 +818,25 @@ module.exports = Preview = (function() {
   }
 
   Preview.prototype.setImage = function(_arg) {
-    var url;
-    url = _arg.url;
-    return this.img.attr('src', url);
+    this.url = _arg.url;
+    return this.img.attr('src', this.url);
+  };
+
+  Preview.prototype.reset = function() {
+    this.url = void 0;
+    this.x = this.y = 0;
+    this.width = this.height = 0;
+    this.img.attr('src', '');
+    this.img.css({
+      width: '',
+      height: '',
+      transform: ''
+    });
+    if (this.outline) {
+      return this.outline.css({
+        transform: ''
+      });
+    }
   };
 
   Preview.prototype.setWidth = function(width) {
