@@ -4,7 +4,7 @@ module.exports = window.srcissors =
 
   new: ({
     arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
-    minRatio, maxRatio, maxArea, zoomStep, crop
+    minRatio, maxRatio, maxArea, zoomStep, crop, actions
   }) ->
     arena = $(arena)
     view = arena.find('.crop-view')
@@ -13,6 +13,15 @@ module.exports = window.srcissors =
     preview.append(img)
     outline = view.find('.crop-outline')
     outline = undefined if not outline.length
+
+    allowedActions =
+      pan: true
+      zoomOnDoubleClick: true
+      resize: true
+      resizeHorizontal: !fixedWidth
+      resizeVertical: !fixedHeight
+
+    $.extend(allowedActions, actions)
 
     zoomStep ?= 1.25
 
@@ -34,4 +43,5 @@ module.exports = window.srcissors =
       maxViewRatio: maxRatio # {Number} e.g. 2/1
       maxArea: maxArea # {Number} 0.8 -> max 80% of arena area are covered by the preview
       zoomStep: zoomStep # {Number} e.g. 1.25 -> 125%
+      actions: allowedActions
 
