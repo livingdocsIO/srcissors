@@ -34,6 +34,8 @@
       </div>
     </div>
 
+    <a class="swap-image" href="">swap image</a>
+
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
@@ -64,6 +66,11 @@
         // Prevent triggering of other events like double click
         $('.icon-zoom-in, .icon-zoom-out').on('mousedown', function(event) {
           event.stopPropagation();
+        });
+
+        $('.swap-image').on('click', function(event) {
+          crop.setImage('/images/storytelling-painting.jpg');
+          event.preventDefault();
         });
 
       });

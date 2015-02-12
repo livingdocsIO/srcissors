@@ -6,3 +6,18 @@
 body {
   background-color: #222;
 }
+
+.swap-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  margin: 10px;
+  padding: 3px 5px;
+  display: inline-block;
+
+  border-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  background: rgba(255, 255, 255, 0.5);
+}
