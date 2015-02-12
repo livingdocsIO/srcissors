@@ -52,13 +52,13 @@ cropper.on('change', function(crop) {
 |---------------|-------------|--------------------------------|
 | `arena` | jQuery element |  |
 | `url` | String | Url of the image to load |
-| `crop` | Object {x, y, width, height} | Initial crop. The same as calling `setCrop()` |
+| `crop` | Object | {x, y, width, height} Initial crop. The same as calling `setCrop()` |
 | `fixedWidth`, `fixedHeight` | Number | Will fix the preview width and only allow for resizes in the other axis. |
 | `minWidth`, `minHeight` | Number | Minimum widht or height the preview can be. |
 | `minRatio`, `maxRatio` |  Number | Prohibit extreme image ratios with these settings. |
 | `maxArea` | Number | e.g. `0.8` means max 80% of the area will be covered by the image. This makes for smoth transitions between wide and tall image formats. |
 | `zoomStep` | Number | e.g. `1.25` means every zoom will enlarge the preview by 25%. |
-
+| `actions` | Object | {pan, zoomOnDoubleClick, resize } Allowed user interactions. By default they are all set to `true`. |
 
 ### HTML
 

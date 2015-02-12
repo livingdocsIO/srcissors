@@ -6,7 +6,7 @@ module.exports = class Crop
   constructor: ({
       @arena, @view, @img, @outline, url, @fixedWidth, @fixedHeight,
       @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio, crop
-      zoomStep, maxArea
+      zoomStep, maxArea, @actions
     }) ->
 
       # CSS classes
@@ -53,8 +53,7 @@ module.exports = class Crop
     @events = new Events
       parent: this
       view: @view
-      horizontal: !@fixedWidth
-      vertical: !@fixedHeight
+      actions: @actions
 
     @imageWidth = width
     @imageHeight = height

@@ -1,12 +1,17 @@
 module.exports = class Events
 
-  constructor: ({ @parent, @view, horizontal, vertical }) ->
+  constructor: ({ @parent, @view, horizontal, vertical, actions }) ->
     @doubleClickThreshold = 300
 
-    @pan()
-    @doubleClick()
+    # setup events
+    @pan() if actions.pan
+    @doubleClick() if actions.zoomOnDoubleClick
+    if actions.resize
+      @resizeView
+        horizontal: actions.resizeHorizontal
+        vertical: actions.resizeVertical
+
     @preventBrowserDragDrop()
-    @resizeView(horizontal: horizontal, vertical: vertical)
     @responsiveArena()
 
 
@@ -44,7 +49,7 @@ module.exports = class Events
 
 
   preventBrowserDragDrop: ->
-    @view.on('dragstart', -> return false)
+    @view.on('dragstart.srcissors', -> return false)
 
 
   # Resize View
