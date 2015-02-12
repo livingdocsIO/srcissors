@@ -20,14 +20,8 @@ module.exports = class Crop
 
       # Events
       @readyEvent = $.Callbacks('memory once')
+      @loadEvent = $.Callbacks()
       @changeEvent = $.Callbacks()
-
-      # Ready
-      @isReady = false
-      @view.addClass(@loadingCssClass)
-      this.on 'ready', =>
-        @isReady = true
-        @view.removeClass(@loadingCssClass)
 
       # Confguration
       @zoomInStep = zoomStep
@@ -46,14 +40,24 @@ module.exports = class Crop
         img: @img
         outline: @outline
 
-      @preview.setImage({ url })
+      @setImage(url)
+
+
+  setImage: (url) ->
+    return unless url != @preview.url
+
+    @preview.reset() if @isInitialized
+    @isReady = false
+    @view.addClass(@loadingCssClass)
+    @preview.setImage({ url })
 
 
   onPreviewReady: ({ width, height }) =>
-    @events = new Events
-      parent: this
-      view: @view
-      actions: @actions
+    if not @isInitialized
+      @events = new Events
+        parent: this
+        view: @view
+        actions: @actions
 
     @imageWidth = width
     @imageHeight = height
@@ -68,14 +72,19 @@ module.exports = class Crop
       height: @imageHeight
       keepDimension: keepDimension
 
-    @readyEvent.fire()
+    # ready state
+    @isReady = true
+    @view.removeClass(@loadingCssClass)
 
-    if @initialCrop?
+    if not @isInitialized && @initialCrop?
       @setCrop(@initialCrop)
     else
       @zoomAllOut()
       @center()
 
+    @isInitialized = true
+    @readyEvent.fire()
+    @loadEvent.fire()
 
 
   setCrop: ({ x, y, width, height }) ->
@@ -487,6 +496,4 @@ module.exports = class Crop
 
     console.log(obj)
     return obj
-
-
 

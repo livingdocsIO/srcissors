@@ -29,8 +29,16 @@ cropper.getCrop();
 // Set a ratio
 cropper.setRatio(4/3);
 
-// Listen for events
+// Set a new url
+cropper.setImage('/images/storytelling-painting.jpg');
+
+// Listen for the ready event (only fired once)
 cropper.on('ready', function() {
+    // your code
+});
+
+// Listen for image load events
+cropper.on('load', function() {
     // your code
 });
 

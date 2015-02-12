@@ -14,8 +14,17 @@ module.exports = class Preview
       @img.show()
 
 
-  setImage: ({ url }) ->
-    @img.attr('src', url)
+  setImage: ({ @url }) ->
+    @img.attr('src', @url)
+
+
+  reset: ->
+    @url = undefined
+    @x = @y = 0
+    @width = @height = 0
+    @img.attr('src', '')
+    @img.css(width: '', height: '', transform: '')
+    @outline.css(transform: '') if @outline
 
 
   setWidth: (width) ->

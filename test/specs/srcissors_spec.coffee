@@ -85,6 +85,20 @@ describe 'srcissors', ->
           done()
 
 
+    describe 'setImage()', ->
+
+      beforeEach (done) ->
+        @crop.on 'load', done
+
+        # Set a different 300x400 image
+        @crop.setImage('base/test/images/berge.jpg')
+
+
+      it 'sets the new image dimensions', ->
+        expect(@crop.imageWidth).to.equal(300)
+        expect(@crop.imageHeight).to.equal(400)
+
+
   describe 'with a 100x200 arena', ->
 
     beforeEach (done) ->
