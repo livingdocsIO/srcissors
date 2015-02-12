@@ -1,7 +1,7 @@
 {
-  "name": "scrissors",
+  "name": "srcissors",
   "version": "0.2.0",
-  "homepage": "https://github.com/upfrontIO/scrissors",
+  "homepage": "https://github.com/upfrontIO/srcissors",
   "description": "Image cropping for responsive images",
   "author": "upfront.io",
   "license": "LGPL-3.0+",
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/upfrontIO/scrissors.git"
+    "url": "git://github.com/upfrontIO/srcissors.git"
   },
-  "browser": "src/scrissors.coffee",
-  "main": "src/scrissors.coffee",
+  "browser": "src/srcissors.coffee",
+  "main": "src/srcissors.coffee",
   "devDependencies": {
     "browserify": "^6.2.0",
     "chai": "^1.9.2",
