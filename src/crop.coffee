@@ -44,9 +44,9 @@ module.exports = class Crop
 
 
   setImage: (url) ->
-    if @isInitialized
-      @preview.reset()
+    return unless url != @preview.url
 
+    @preview.reset() if @isInitialized
     @isReady = false
     @view.addClass(@loadingCssClass)
     @preview.setImage({ url })
