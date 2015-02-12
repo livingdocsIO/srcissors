@@ -9,7 +9,7 @@ Events = require('./events');
 module.exports = Crop = (function() {
   function Crop(_arg) {
     var crop, maxArea, url, zoomStep;
-    this.arena = _arg.arena, this.view = _arg.view, this.img = _arg.img, this.outline = _arg.outline, url = _arg.url, this.fixedWidth = _arg.fixedWidth, this.fixedHeight = _arg.fixedHeight, this.minViewWidth = _arg.minViewWidth, this.minViewHeight = _arg.minViewHeight, this.minViewRatio = _arg.minViewRatio, this.maxViewRatio = _arg.maxViewRatio, crop = _arg.crop, zoomStep = _arg.zoomStep, maxArea = _arg.maxArea;
+    this.arena = _arg.arena, this.view = _arg.view, this.img = _arg.img, this.outline = _arg.outline, url = _arg.url, this.fixedWidth = _arg.fixedWidth, this.fixedHeight = _arg.fixedHeight, this.minViewWidth = _arg.minViewWidth, this.minViewHeight = _arg.minViewHeight, this.minViewRatio = _arg.minViewRatio, this.maxViewRatio = _arg.maxViewRatio, crop = _arg.crop, zoomStep = _arg.zoomStep, maxArea = _arg.maxArea, this.actions = _arg.actions;
     this.onPreviewReady = __bind(this.onPreviewReady, this);
     this.loadingCssClass = 'crop-view--is-loading';
     this.panningCssClass = 'crop-view--is-panning';
@@ -49,8 +49,7 @@ module.exports = Crop = (function() {
     this.events = new Events({
       parent: this,
       view: this.view,
-      horizontal: !this.fixedWidth,
-      vertical: !this.fixedHeight
+      actions: this.actions
     });
     this.imageWidth = width;
     this.imageHeight = height;
@@ -634,16 +633,22 @@ var Events;
 
 module.exports = Events = (function() {
   function Events(_arg) {
-    var horizontal, vertical;
-    this.parent = _arg.parent, this.view = _arg.view, horizontal = _arg.horizontal, vertical = _arg.vertical;
+    var actions, horizontal, vertical;
+    this.parent = _arg.parent, this.view = _arg.view, horizontal = _arg.horizontal, vertical = _arg.vertical, actions = _arg.actions;
     this.doubleClickThreshold = 300;
-    this.pan();
-    this.doubleClick();
+    if (actions.pan) {
+      this.pan();
+    }
+    if (actions.zoomOnDoubleClick) {
+      this.doubleClick();
+    }
+    if (actions.resize) {
+      this.resizeView({
+        horizontal: actions.resizeHorizontal,
+        vertical: actions.resizeVertical
+      });
+    }
     this.preventBrowserDragDrop();
-    this.resizeView({
-      horizontal: horizontal,
-      vertical: vertical
-    });
     this.responsiveArena();
   }
 
@@ -694,7 +699,7 @@ module.exports = Events = (function() {
   };
 
   Events.prototype.preventBrowserDragDrop = function() {
-    return this.view.on('dragstart', function() {
+    return this.view.on('dragstart.srcissors', function() {
       return false;
     });
   };
@@ -875,8 +880,8 @@ Crop = require('./crop');
 
 module.exports = window.srcissors = {
   "new": function(_arg) {
-    var arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minWidth, outline, preview, url, view, zoomStep;
-    arena = _arg.arena, url = _arg.url, fixedWidth = _arg.fixedWidth, fixedHeight = _arg.fixedHeight, minWidth = _arg.minWidth, minHeight = _arg.minHeight, minRatio = _arg.minRatio, maxRatio = _arg.maxRatio, maxArea = _arg.maxArea, zoomStep = _arg.zoomStep, crop = _arg.crop;
+    var actions, allowedActions, arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minWidth, outline, preview, url, view, zoomStep;
+    arena = _arg.arena, url = _arg.url, fixedWidth = _arg.fixedWidth, fixedHeight = _arg.fixedHeight, minWidth = _arg.minWidth, minHeight = _arg.minHeight, minRatio = _arg.minRatio, maxRatio = _arg.maxRatio, maxArea = _arg.maxArea, zoomStep = _arg.zoomStep, crop = _arg.crop, actions = _arg.actions;
     arena = $(arena);
     view = arena.find('.crop-view');
     preview = view.find('.crop-preview');
@@ -886,6 +891,14 @@ module.exports = window.srcissors = {
     if (!outline.length) {
       outline = void 0;
     }
+    allowedActions = {
+      pan: true,
+      zoomOnDoubleClick: true,
+      resize: true,
+      resizeHorizontal: !fixedWidth,
+      resizeVertical: !fixedHeight
+    };
+    $.extend(allowedActions, actions);
     if (zoomStep == null) {
       zoomStep = 1.25;
     }
@@ -909,7 +922,8 @@ module.exports = window.srcissors = {
       minViewRatio: minRatio,
       maxViewRatio: maxRatio,
       maxArea: maxArea,
-      zoomStep: zoomStep
+      zoomStep: zoomStep,
+      actions: allowedActions
     });
   }
 };
