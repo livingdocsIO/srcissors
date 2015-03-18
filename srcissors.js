@@ -48,6 +48,17 @@ module.exports = Crop = (function() {
     });
   };
 
+  Crop.prototype.reset = function() {
+    if (!this.isReady) {
+      return;
+    }
+    this.resize({
+      width: this.imageWidth,
+      height: this.imageHeight
+    });
+    return this.zoomAllOut();
+  };
+
   Crop.prototype.onPreviewReady = function(_arg) {
     var height, keepDimension, width;
     width = _arg.width, height = _arg.height;
