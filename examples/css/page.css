@@ -7,17 +7,24 @@ body {
   background-color: #222;
 }
 
-.swap-image {
+.crop-actions {
   position: absolute;
   top: 0;
   right: 0;
 
   margin: 10px;
-  padding: 3px 5px;
-  display: inline-block;
+}
+
+.crop-actions a {
+  display: block;
+  min-width: 120px;
+  padding: 4px 5px;
+  margin-bottom: 2px;
 
   border-radius: 5px;
   text-decoration: none;
   color: #000;
   background: rgba(255, 255, 255, 0.5);
+  text-align: center;
 }
+
