@@ -99,6 +99,19 @@ describe 'srcissors', ->
         expect(@crop.imageHeight).to.equal(400)
 
 
+    describe 'reset()', ->
+
+      it 'resets the zoom and ratio to the original', ->
+        @crop.setRatio(1)
+        @crop.zoom(width: 200)
+        @crop.reset()
+        expect(@crop.getCrop()).to.deep.equal
+          x: 0
+          y: 0
+          width: 400
+          height: 300
+
+
   describe 'with a 100x200 arena', ->
 
     beforeEach (done) ->

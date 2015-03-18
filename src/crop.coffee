@@ -52,6 +52,13 @@ module.exports = class Crop
     @preview.setImage({ url })
 
 
+  reset: ->
+    return unless @isReady
+
+    @resize(width: @imageWidth, height: @imageHeight)
+    @zoomAllOut()
+
+
   onPreviewReady: ({ width, height }) =>
     if not @isInitialized
       @events = new Events
