@@ -148,3 +148,54 @@ describe 'srcissors', ->
 
           done()
 
+
+  describe 'when it is loading the image', ->
+
+    beforeEach ->
+      @arena = $(template)
+      @arena.css(width: 100, height: 100)
+      $(document.body).append(@arena)
+
+      # Crop a 400x300 image
+      @crop = srcissors.new
+        arena: @arena
+        url: 'base/test/images/diagonal.jpg'
+
+
+    afterEach ->
+      @arena.remove()
+
+
+    it 'calls ready, load and change events', (done) ->
+      readyIsCalled = 0
+      loadIsCalled = 0
+      changeIsCalled = 0
+
+      @crop.on 'ready', =>
+        readyIsCalled += 1
+        expect(changeIsCalled).to.equal(0)
+        expect(loadIsCalled).to.equal(0)
+
+      @crop.on 'load', =>
+        loadIsCalled += 1
+        expect(readyIsCalled).to.equal(1)
+        expect(changeIsCalled).to.equal(0)
+
+      @crop.on 'change', (crop) =>
+        changeIsCalled += 1
+        expect(loadIsCalled).to.equal(1)
+        expect(readyIsCalled).to.equal(1)
+        done()
+
+
+    it 'calling setCrop() before cropper is ready still works', (done) ->
+      @crop.setRatio(1)
+      @crop.on 'ready', =>
+        info = @crop.getCrop()
+        expect(info).to.deep.equal
+          x: 50
+          y: 0
+          width: 300
+          height: 300
+
+        done()
