@@ -29,6 +29,9 @@ cropper.getCrop();
 // Set a ratio
 cropper.setRatio(4/3);
 
+// Reset to show the full image without any crop applied
+cropper.reset();
+
 // Set a new url
 cropper.setImage('/images/storytelling-painting.jpg');
 

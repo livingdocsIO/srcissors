@@ -14,6 +14,7 @@ module.exports = Crop = (function() {
     this.loadingCssClass = 'crop-view--is-loading';
     this.panningCssClass = 'crop-view--is-panning';
     this.outlineCssClass = 'crop-outline--active';
+    this.isReady = false;
     this.isPanning = false;
     this.initialCrop = crop;
     this.readyEvent = $.Callbacks('memory once');
@@ -46,6 +47,17 @@ module.exports = Crop = (function() {
     return this.preview.setImage({
       url: url
     });
+  };
+
+  Crop.prototype.reset = function() {
+    if (!this.isReady) {
+      return;
+    }
+    this.resize({
+      width: this.imageWidth,
+      height: this.imageHeight
+    });
+    return this.zoomAllOut();
   };
 
   Crop.prototype.onPreviewReady = function(_arg) {
@@ -157,10 +169,7 @@ module.exports = Crop = (function() {
     if (!this.isReady) {
       this.on('ready', (function(_this) {
         return function() {
-          return _this.setRatio({
-            ratio: ratio,
-            keepDimension: keepDimension
-          });
+          return _this.setRatio(ratio, keepDimension);
         };
       })(this));
       return;

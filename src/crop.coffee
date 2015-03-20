@@ -15,6 +15,7 @@ module.exports = class Crop
       @outlineCssClass = 'crop-outline--active'
 
       # State
+      @isReady = false
       @isPanning = false
       @initialCrop = crop
 
@@ -50,6 +51,13 @@ module.exports = class Crop
     @isReady = false
     @view.addClass(@loadingCssClass)
     @preview.setImage({ url })
+
+
+  reset: ->
+    return unless @isReady
+
+    @resize(width: @imageWidth, height: @imageHeight)
+    @zoomAllOut()
 
 
   onPreviewReady: ({ width, height }) =>
@@ -133,7 +141,7 @@ module.exports = class Crop
   setRatio: (ratio, keepDimension) ->
     if not @isReady
       this.on 'ready', =>
-        @setRatio({ ratio, keepDimension })
+        @setRatio(ratio, keepDimension)
       return
 
     ratio = @enforceValidRatio(ratio)
