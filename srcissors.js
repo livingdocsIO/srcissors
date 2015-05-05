@@ -14,12 +14,11 @@ module.exports = Crop = (function() {
     this.loadingCssClass = 'crop-view--is-loading';
     this.panningCssClass = 'crop-view--is-panning';
     this.outlineCssClass = 'crop-outline--active';
-    this.isReady = false;
     this.isPanning = false;
     this.initialCrop = crop;
-    this.readyEvent = $.Callbacks('memory once');
     this.loadEvent = $.Callbacks();
     this.changeEvent = $.Callbacks();
+    this.initializeReadyState();
     this.zoomInStep = zoomStep;
     this.zoomOutStep = 1 / this.zoomInStep;
     this.arenaWidth = this.arena.width();
@@ -35,6 +34,15 @@ module.exports = Crop = (function() {
     this.setImage(url);
   }
 
+  Crop.prototype.initializeReadyState = function() {
+    var _ref;
+    this.isReady = false;
+    if ((_ref = this.readyEvent) != null) {
+      _ref.empty();
+    }
+    return this.readyEvent = $.Callbacks('memory once');
+  };
+
   Crop.prototype.setImage = function(url) {
     if (url === this.preview.url) {
       return;
@@ -42,7 +50,7 @@ module.exports = Crop = (function() {
     if (this.isInitialized) {
       this.preview.reset();
     }
-    this.isReady = false;
+    this.initializeReadyState();
     this.view.addClass(this.loadingCssClass);
     return this.preview.setImage({
       url: url

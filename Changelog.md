@@ -1,3 +1,7 @@
+# v1.0.1
+
+- Avoid infinite loop when setting ratio [#5](https://github.com/upfrontIO/srcissors/pull/5)
+
 
 # v1.0.0
 
@@ -17,4 +21,3 @@
 # v0.1.0
 
 Initial Release
-
