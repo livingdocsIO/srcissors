@@ -15,14 +15,15 @@ module.exports = class Crop
       @outlineCssClass = 'crop-outline--active'
 
       # State
-      @isReady = false
       @isPanning = false
       @initialCrop = crop
 
       # Events
-      @readyEvent = $.Callbacks('memory once')
       @loadEvent = $.Callbacks()
       @changeEvent = $.Callbacks()
+
+      # Sets up the ready event and state
+      @initializeReadyState()
 
       # Confguration
       @zoomInStep = zoomStep
@@ -44,11 +45,17 @@ module.exports = class Crop
       @setImage(url)
 
 
+  initializeReadyState: ->
+    @isReady = false
+    @readyEvent?.empty()
+    @readyEvent = $.Callbacks('memory once')
+
+
   setImage: (url) ->
     return unless url != @preview.url
 
     @preview.reset() if @isInitialized
-    @isReady = false
+    @initializeReadyState()
     @view.addClass(@loadingCssClass)
     @preview.setImage({ url })
 
