@@ -61,7 +61,7 @@ describe 'srcissors', ->
       # The view should keep the images aspect ratio and have a size of 100x75
       it 'zooms 2x into the center', (done) ->
         @crop.zoom(width: 200)
-        @crop.on 'change', (crop) =>
+        @crop.on 'change', (crop) ->
           expect(crop).to.deep.equal
             x: 100
             y: 75
@@ -75,7 +75,7 @@ describe 'srcissors', ->
 
       it 'sets a square ratio', (done) ->
         @crop.setRatio(1)
-        @crop.on 'change', (crop) =>
+        @crop.on 'change', (crop) ->
           expect(crop).to.deep.equal
             x: 50
             y: 0
@@ -139,7 +139,7 @@ describe 'srcissors', ->
 
       it 'sets a square ratio', (done) ->
         @crop.setRatio(1)
-        @crop.on 'change', (crop) =>
+        @crop.on 'change', (crop) ->
           expect(crop).to.deep.equal
             x: 50
             y: 0
@@ -171,17 +171,17 @@ describe 'srcissors', ->
       loadIsCalled = 0
       changeIsCalled = 0
 
-      @crop.on 'ready', =>
+      @crop.on 'ready', ->
         readyIsCalled += 1
         expect(changeIsCalled).to.equal(0)
         expect(loadIsCalled).to.equal(0)
 
-      @crop.on 'load', =>
+      @crop.on 'load', ->
         loadIsCalled += 1
         expect(readyIsCalled).to.equal(1)
         expect(changeIsCalled).to.equal(0)
 
-      @crop.on 'change', (crop) =>
+      @crop.on 'change', (crop) ->
         changeIsCalled += 1
         expect(loadIsCalled).to.equal(1)
         expect(readyIsCalled).to.equal(1)
