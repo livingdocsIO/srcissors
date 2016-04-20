@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>srcissors.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!--  css -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/page.css">
+    <link rel="stylesheet" href="/css/srcissors.css">
+  </head>
+  <body>
+    <div class="clip-content">
+      <div class="crop-arena no-selection">
+        <div class="crop-view crop-view--is-loading">
+          <!-- Outline -->
+          <div class="crop-outline"></div>
+
+          <!-- zoom controls -->
+          <div class="top-left">
+              <div class="crop-zoom-controls crop-zoom-controls--outside">
+                <a class="icon-zoom icon-zoom-in" href="#" title="Zoom in"></a>
+                <a class="icon-zoom icon-zoom-out" href="#" title="Zoom out"></a>
+              </div>
+          </div>
+
+          <!-- image -->
+          <div class="crop-preview clip-content cover-all"></div>
+
+          <!-- art direction -->
+          <!-- todo: display image in different size -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+    <!-- srcissors. yeah! -->
+    <script src="/srcissors.js"></script>
+
+    <script>
+
+      $(document).ready(function() {
+        var crop = window.c = srcissors.new({
+          arena: $('.crop-arena'),
+          url: "/images/16x9.png",
+          // The image is 1600 * 900, for demo, we choos 1/4 of the resolution
+          minResolution: 800 * 450
+        });
+
+        $('.icon-zoom-in').on('click', function(event) {
+          crop.zoomIn();
+          event.stopPropagation();
+        });
+
+        $('.icon-zoom-out').on('click', function(event) {
+          crop.zoomOut();
+          event.stopPropagation();
+        });
+
+        // Prevent triggering of other events like double click
+        $('.icon-zoom-in, .icon-zoom-out').on('mousedown', function(event) {
+          event.stopPropagation();
+        });
+      });
+
+    </script>
+
+  </body>
+</html>

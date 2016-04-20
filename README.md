@@ -64,8 +64,9 @@ cropper.on('change', function(crop) {
 | `arena` | jQuery element |  |
 | `url` | String | Url of the image to load |
 | `crop` | Object | {x, y, width, height} Initial crop. The same as calling `setCrop()` |
+| `minResolution` | The minimal resolution required from the resulting image. |
 | `fixedWidth`, `fixedHeight` | Number | Will fix the preview width and only allow for resizes in the other axis. |
-| `minWidth`, `minHeight` | Number | Minimum widht or height the preview can be. |
+| `minWidth`, `minHeight` | Number | Minimum width or height the preview can be. |
 | `minRatio`, `maxRatio` |  Number | Prohibit extreme image ratios with these settings. |
 | `maxArea` | Number | e.g. `0.8` means max 80% of the area will be covered by the image. This makes for smoth transitions between wide and tall image formats. |
 | `zoomStep` | Number | e.g. `1.25` means every zoom will enlarge the preview by 25%. |
@@ -128,5 +129,5 @@ Copyright (c) 2015 upfront GmbH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License (LGPL) as
-published by the Free Software Foundation, either version 3 of the License, 
+published by the Free Software Foundation, either version 3 of the License,
 or (at your option) any later version.

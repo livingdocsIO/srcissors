@@ -6,7 +6,7 @@ module.exports = class Crop
   constructor: ({
       @arena, @view, @img, @outline, url, @fixedWidth, @fixedHeight,
       @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio, crop
-      zoomStep, maxArea, @actions
+      zoomStep, maxArea, @actions, @minResolution
     }) ->
 
       # CSS classes
@@ -52,7 +52,7 @@ module.exports = class Crop
 
 
   setImage: (url) ->
-    return unless url != @preview.url
+    return if url == @preview.url
 
     @preview.reset() if @isInitialized
     @initializeReadyState()
@@ -77,6 +77,22 @@ module.exports = class Crop
     @imageWidth = width
     @imageHeight = height
     @imageRatio = @imageWidth / @imageHeight
+    imageResolution = @imageWidth * @imageHeight
+
+    if @minResolution && @minResolution > imageResolution
+      # If the minimal required resolution is bigger than the actual image
+      # resolution, we ignore the configuration
+      delete @minResolution
+
+    if @minResolution
+      # For any given image resolution with a minimal required resolution
+      # we can calculate both, a minimal resolution and a maximal resolution
+      minRatioForResolution = @minResolution / (@imageHeight * @imageHeight)
+      if !@minViewRatio || @minViewRatio < minRatioForResolution
+        @minViewRatio = minRatioForResolution
+      maxRatioForResolution = (@imageWidth  * @imageWidth) / @minResolution
+      if !@maxViewRatio || @maxViewRatio > maxRatioForResolution
+        @maxViewRatio = maxRatioForResolution
 
     @calcMaxMinDimensions()
 
@@ -234,6 +250,13 @@ module.exports = class Crop
     @viewWidth = width
     @viewHeight = height
     @viewRatio = width / height
+
+    if @minResolution
+      minZoomPixelWidth = Math.sqrt(@minResolution * @viewRatio)
+      minZoomPixelHeight = Math.sqrt(@minResolution / @viewRatio)
+      @maxImageWidth = (@viewWidth / minZoomPixelWidth) * @imageWidth
+      @maxImageHeight = (@viewHeight / minZoomPixelHeight) * @imageHeight
+
     @fireChange()
 
 
@@ -332,18 +355,22 @@ module.exports = class Crop
 
 
   enforceZoom: ({ width, height }) ->
-    if width?
-      if width > @imageWidth
-        #  prevent zooming in past native image resolution
-        return { width: @imageWidth }
-      else if width < @viewWidth
-        # prevent zooming out past covering the view completely
-        return { width: @viewWidth }
-    if height?
-      if height > @imageHeight
-        return { height: @imageHeight }
-      else if height < @viewHeight
-        return { height: @viewHeight }
+
+    if width? && @maxImageWidth && width > @maxImageWidth
+      # prevent zooming in past the required resolution defined by minResolution
+      return { width: @maxImageWidth}
+
+    if width? && width < @viewWidth
+      # prevent zooming out past covering the view completely
+      return { width: @viewWidth }
+
+    if height? && @maxImageHeight && height > @maxImageHeight
+      # prevent zooming in past the required resolution defined by minResolution
+      return { height: @maxImageHeight}
+
+    if height? && height < @viewHeight
+      # prevent zooming out past covering the view completely
+      return { height: @viewHeight }
 
     { width, height }
 
@@ -397,7 +424,8 @@ module.exports = class Crop
       if not @isValidRatio(ratio)
         ratio = @enforceValidRatio(ratio)
         { width, height } = @getRatioBox({ ratio: ratio, width, height, keepDimension })
-        { width, height } = @centerAlign(@maxWidth, @maxHeight, ratio)
+        if width > @arenaWidth || height > @arenaHeight
+          { width, height } = @centerAlign(@maxWidth, @maxHeight, ratio)
 
     else if newWidth || newHeight
       ratio = @enforceValidRatio(width / height)
@@ -511,4 +539,3 @@ module.exports = class Crop
 
     console.log(obj)
     return obj
-
