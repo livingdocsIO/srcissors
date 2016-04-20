@@ -1,16 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Crop, Events, Preview,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Preview = require('./preview');
 
 Events = require('./events');
 
 module.exports = Crop = (function() {
-  function Crop(_arg) {
+  function Crop(arg) {
     var crop, maxArea, url, zoomStep;
-    this.arena = _arg.arena, this.view = _arg.view, this.img = _arg.img, this.outline = _arg.outline, url = _arg.url, this.fixedWidth = _arg.fixedWidth, this.fixedHeight = _arg.fixedHeight, this.minViewWidth = _arg.minViewWidth, this.minViewHeight = _arg.minViewHeight, this.minViewRatio = _arg.minViewRatio, this.maxViewRatio = _arg.maxViewRatio, crop = _arg.crop, zoomStep = _arg.zoomStep, maxArea = _arg.maxArea, this.actions = _arg.actions;
-    this.onPreviewReady = __bind(this.onPreviewReady, this);
+    this.arena = arg.arena, this.view = arg.view, this.img = arg.img, this.outline = arg.outline, url = arg.url, this.fixedWidth = arg.fixedWidth, this.fixedHeight = arg.fixedHeight, this.minViewWidth = arg.minViewWidth, this.minViewHeight = arg.minViewHeight, this.minViewRatio = arg.minViewRatio, this.maxViewRatio = arg.maxViewRatio, crop = arg.crop, zoomStep = arg.zoomStep, maxArea = arg.maxArea, this.actions = arg.actions, this.minResolution = arg.minResolution;
+    this.onPreviewReady = bind(this.onPreviewReady, this);
     this.loadingCssClass = 'crop-view--is-loading';
     this.panningCssClass = 'crop-view--is-panning';
     this.outlineCssClass = 'crop-outline--active';
@@ -35,10 +35,10 @@ module.exports = Crop = (function() {
   }
 
   Crop.prototype.initializeReadyState = function() {
-    var _ref;
+    var ref;
     this.isReady = false;
-    if ((_ref = this.readyEvent) != null) {
-      _ref.empty();
+    if ((ref = this.readyEvent) != null) {
+      ref.empty();
     }
     return this.readyEvent = $.Callbacks('memory once');
   };
@@ -68,9 +68,9 @@ module.exports = Crop = (function() {
     return this.zoomAllOut();
   };
 
-  Crop.prototype.onPreviewReady = function(_arg) {
-    var height, keepDimension, width;
-    width = _arg.width, height = _arg.height;
+  Crop.prototype.onPreviewReady = function(arg) {
+    var height, imageResolution, keepDimension, maxRatioForResolution, minRatioForResolution, width;
+    width = arg.width, height = arg.height;
     if (!this.isInitialized) {
       this.events = new Events({
         parent: this,
@@ -81,6 +81,20 @@ module.exports = Crop = (function() {
     this.imageWidth = width;
     this.imageHeight = height;
     this.imageRatio = this.imageWidth / this.imageHeight;
+    imageResolution = this.imageWidth * this.imageHeight;
+    if (this.minResolution && this.minResolution > imageResolution) {
+      delete this.minResolution;
+    }
+    if (this.minResolution) {
+      minRatioForResolution = this.minResolution / (this.imageHeight * this.imageHeight);
+      if (!this.minViewRatio || this.minViewRatio < minRatioForResolution) {
+        this.minViewRatio = minRatioForResolution;
+      }
+      maxRatioForResolution = (this.imageWidth * this.imageWidth) / this.minResolution;
+      if (!this.maxViewRatio || this.maxViewRatio > maxRatioForResolution) {
+        this.maxViewRatio = maxRatioForResolution;
+      }
+    }
     this.calcMaxMinDimensions();
     if (this.fixedWidth) {
       keepDimension = 'width';
@@ -106,9 +120,9 @@ module.exports = Crop = (function() {
     return this.loadEvent.fire();
   };
 
-  Crop.prototype.setCrop = function(_arg) {
+  Crop.prototype.setCrop = function(arg) {
     var factor, height, previewWidth, width, x, y;
-    x = _arg.x, y = _arg.y, width = _arg.width, height = _arg.height;
+    x = arg.x, y = arg.y, width = arg.width, height = arg.height;
     if (!this.isReady) {
       this.on('ready', (function(_this) {
         return function() {
@@ -152,13 +166,13 @@ module.exports = Crop = (function() {
   };
 
   Crop.prototype.roundCrop = function(crop) {
-    var name, value, _results;
-    _results = [];
+    var name, results, value;
+    results = [];
     for (name in crop) {
       value = crop[name];
-      _results.push(crop[name] = Math.round(value));
+      results.push(crop[name] = Math.round(value));
     }
-    return _results;
+    return results;
   };
 
   Crop.prototype.validateCrop = function(crop) {
@@ -218,10 +232,10 @@ module.exports = Crop = (function() {
     return this.outline.removeClass(this.outlineCssClass);
   };
 
-  Crop.prototype.onDoubleClick = function(_arg) {
-    var left, pageX, pageY, top, viewX, viewY, _ref;
-    pageX = _arg.pageX, pageY = _arg.pageY;
-    _ref = this.view[0].getBoundingClientRect(), left = _ref.left, top = _ref.top;
+  Crop.prototype.onDoubleClick = function(arg) {
+    var left, pageX, pageY, ref, top, viewX, viewY;
+    pageX = arg.pageX, pageY = arg.pageY;
+    ref = this.view[0].getBoundingClientRect(), left = ref.left, top = ref.top;
     viewX = pageX - left;
     viewY = pageY - top;
     return this.zoomIn({
@@ -230,9 +244,9 @@ module.exports = Crop = (function() {
     });
   };
 
-  Crop.prototype.onResize = function(_arg) {
+  Crop.prototype.onResize = function(arg) {
     var dx, dy, position;
-    position = _arg.position, dx = _arg.dx, dy = _arg.dy;
+    position = arg.position, dx = arg.dx, dy = arg.dy;
     if (!this.isResizing) {
       this.isResizing = true;
       this.resizeFocusPoint = this.getFocusPoint();
@@ -259,9 +273,9 @@ module.exports = Crop = (function() {
     return this.resizeFocusPoint = void 0;
   };
 
-  Crop.prototype.resize = function(_arg) {
+  Crop.prototype.resize = function(arg) {
     var height, keepDimension, width;
-    width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+    width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     this.setViewDimensions({
       width: width,
       height: height,
@@ -278,21 +292,21 @@ module.exports = Crop = (function() {
     });
   };
 
-  Crop.prototype.setViewDimensions = function(_arg) {
-    var height, keepDimension, width, _ref, _ref1;
-    width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+  Crop.prototype.setViewDimensions = function(arg) {
+    var height, keepDimension, minZoomPixelHeight, minZoomPixelWidth, ref, ref1, width;
+    width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     if (this.maxArea) {
-      _ref = this.enforceMaxArea({
+      ref = this.enforceMaxArea({
         width: width,
         height: height,
         keepDimension: keepDimension
-      }), width = _ref.width, height = _ref.height;
+      }), width = ref.width, height = ref.height;
     }
-    _ref1 = this.enforceViewDimensions({
+    ref1 = this.enforceViewDimensions({
       width: width,
       height: height,
       keepDimension: keepDimension
-    }), width = _ref1.width, height = _ref1.height;
+    }), width = ref1.width, height = ref1.height;
     this.view.css({
       width: width,
       height: height
@@ -300,6 +314,12 @@ module.exports = Crop = (function() {
     this.viewWidth = width;
     this.viewHeight = height;
     this.viewRatio = width / height;
+    if (this.minResolution) {
+      minZoomPixelWidth = Math.sqrt(this.minResolution * this.viewRatio);
+      minZoomPixelHeight = Math.sqrt(this.minResolution / this.viewRatio);
+      this.maxImageWidth = (this.viewWidth / minZoomPixelWidth) * this.imageWidth;
+      this.maxImageHeight = (this.viewHeight / minZoomPixelHeight) * this.imageHeight;
+    }
     return this.fireChange();
   };
 
@@ -339,19 +359,19 @@ module.exports = Crop = (function() {
     return this.zoom(params);
   };
 
-  Crop.prototype.zoom = function(_arg) {
-    var focusPoint, height, viewX, viewY, width, _ref;
-    width = _arg.width, height = _arg.height, viewX = _arg.viewX, viewY = _arg.viewY, focusPoint = _arg.focusPoint;
+  Crop.prototype.zoom = function(arg) {
+    var focusPoint, height, ref, viewX, viewY, width;
+    width = arg.width, height = arg.height, viewX = arg.viewX, viewY = arg.viewY, focusPoint = arg.focusPoint;
     if (focusPoint == null) {
       focusPoint = this.getFocusPoint({
         viewX: viewX,
         viewY: viewY
       });
     }
-    _ref = this.enforceZoom({
+    ref = this.enforceZoom({
       width: width,
       height: height
-    }), width = _ref.width, height = _ref.height;
+    }), width = ref.width, height = ref.height;
     if (width != null) {
       this.preview.setWidth(width);
       this.fireChange();
@@ -362,9 +382,9 @@ module.exports = Crop = (function() {
     return this.focus(focusPoint);
   };
 
-  Crop.prototype.getFocusPoint = function(_arg) {
-    var percentX, percentY, viewX, viewY, x, y, _ref;
-    _ref = _arg != null ? _arg : {}, viewX = _ref.viewX, viewY = _ref.viewY;
+  Crop.prototype.getFocusPoint = function(arg) {
+    var percentX, percentY, ref, viewX, viewY, x, y;
+    ref = arg != null ? arg : {}, viewX = ref.viewX, viewY = ref.viewY;
     if (viewX == null) {
       viewX = this.viewWidth / 2;
     }
@@ -383,9 +403,9 @@ module.exports = Crop = (function() {
     };
   };
 
-  Crop.prototype.focus = function(_arg) {
+  Crop.prototype.focus = function(arg) {
     var percentX, percentY, viewX, viewY, x, y;
-    percentX = _arg.percentX, percentY = _arg.percentY, viewX = _arg.viewX, viewY = _arg.viewY;
+    percentX = arg.percentX, percentY = arg.percentY, viewX = arg.viewX, viewY = arg.viewY;
     x = this.preview.width * percentX;
     y = this.preview.height * percentY;
     x = x - viewX;
@@ -412,9 +432,9 @@ module.exports = Crop = (function() {
     return this.fireChange();
   };
 
-  Crop.prototype.enforceXy = function(_arg) {
+  Crop.prototype.enforceXy = function(arg) {
     var x, y;
-    x = _arg.x, y = _arg.y;
+    x = arg.x, y = arg.y;
     if (x < 0) {
       x = 0;
     } else if (x > this.preview.width - this.viewWidth) {
@@ -431,30 +451,28 @@ module.exports = Crop = (function() {
     };
   };
 
-  Crop.prototype.enforceZoom = function(_arg) {
+  Crop.prototype.enforceZoom = function(arg) {
     var height, width;
-    width = _arg.width, height = _arg.height;
-    if (width != null) {
-      if (width > this.imageWidth) {
-        return {
-          width: this.imageWidth
-        };
-      } else if (width < this.viewWidth) {
-        return {
-          width: this.viewWidth
-        };
-      }
+    width = arg.width, height = arg.height;
+    if ((width != null) && this.maxImageWidth && width > this.maxImageWidth) {
+      return {
+        width: this.maxImageWidth
+      };
     }
-    if (height != null) {
-      if (height > this.imageHeight) {
-        return {
-          height: this.imageHeight
-        };
-      } else if (height < this.viewHeight) {
-        return {
-          height: this.viewHeight
-        };
-      }
+    if ((width != null) && width < this.viewWidth) {
+      return {
+        width: this.viewWidth
+      };
+    }
+    if ((height != null) && this.maxImageHeight && height > this.maxImageHeight) {
+      return {
+        height: this.maxImageHeight
+      };
+    }
+    if ((height != null) && height < this.viewHeight) {
+      return {
+        height: this.viewHeight
+      };
     }
     return {
       width: width,
@@ -475,9 +493,9 @@ module.exports = Crop = (function() {
     }
   };
 
-  Crop.prototype.areDimensionsValid = function(_arg) {
+  Crop.prototype.areDimensionsValid = function(arg) {
     var height, invalid, keepDimension, ratio, width;
-    width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+    width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     ratio = width / height;
     invalid = width < this.minWidth || width > this.maxWidth || height < this.minHeight || height > this.maxHeight || ratio < this.minViewRatio || ratio > this.maxViewRatio;
     return !invalid;
@@ -497,9 +515,9 @@ module.exports = Crop = (function() {
     return ratio;
   };
 
-  Crop.prototype.enforceViewDimensions = function(_arg) {
-    var height, keepDimension, newHeight, newWidth, ratio, width, _ref, _ref1, _ref2;
-    width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+  Crop.prototype.enforceViewDimensions = function(arg) {
+    var height, keepDimension, newHeight, newWidth, ratio, ref, ref1, ref2, width;
+    width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     if (width < this.minWidth) {
       newWidth = this.minWidth;
     }
@@ -522,17 +540,19 @@ module.exports = Crop = (function() {
       ratio = width / height;
       if (!this.isValidRatio(ratio)) {
         ratio = this.enforceValidRatio(ratio);
-        _ref = this.getRatioBox({
+        ref = this.getRatioBox({
           ratio: ratio,
           width: width,
           height: height,
           keepDimension: keepDimension
-        }), width = _ref.width, height = _ref.height;
-        _ref1 = this.centerAlign(this.maxWidth, this.maxHeight, ratio), width = _ref1.width, height = _ref1.height;
+        }), width = ref.width, height = ref.height;
+        if (width > this.arenaWidth || height > this.arenaHeight) {
+          ref1 = this.centerAlign(this.maxWidth, this.maxHeight, ratio), width = ref1.width, height = ref1.height;
+        }
       }
     } else if (newWidth || newHeight) {
       ratio = this.enforceValidRatio(width / height);
-      _ref2 = this.centerAlign(this.maxWidth, this.maxHeight, ratio), width = _ref2.width, height = _ref2.height;
+      ref2 = this.centerAlign(this.maxWidth, this.maxHeight, ratio), width = ref2.width, height = ref2.height;
     }
     return {
       width: width,
@@ -540,9 +560,9 @@ module.exports = Crop = (function() {
     };
   };
 
-  Crop.prototype.enforceMaxArea = function(_arg) {
+  Crop.prototype.enforceMaxArea = function(arg) {
     var height, keepDimension, ratio, width;
-    width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+    width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     ratio = width / height;
     if (keepDimension === 'width') {
       height = this.maxArea / width;
@@ -569,9 +589,9 @@ module.exports = Crop = (function() {
     return this.viewRatio >= this.imageRatio;
   };
 
-  Crop.prototype.getRatioBox = function(_arg) {
+  Crop.prototype.getRatioBox = function(arg) {
     var height, keepDimension, ratio, width;
-    ratio = _arg.ratio, width = _arg.width, height = _arg.height, keepDimension = _arg.keepDimension;
+    ratio = arg.ratio, width = arg.width, height = arg.height, keepDimension = arg.keepDimension;
     if (keepDimension === 'width' || (height == null)) {
       height = width / ratio;
     } else if (keepDimension === 'height' || (width == null)) {
@@ -603,10 +623,10 @@ module.exports = Crop = (function() {
   };
 
   Crop.prototype.min = function(array) {
-    var min, number, _i, _len;
+    var i, len, min, number;
     min = array[0];
-    for (_i = 0, _len = array.length; _i < _len; _i++) {
-      number = array[_i];
+    for (i = 0, len = array.length; i < len; i++) {
+      number = array[i];
       if (number < min) {
         min = number;
       }
@@ -655,14 +675,13 @@ module.exports = Crop = (function() {
 })();
 
 
-
 },{"./events":2,"./preview":3}],2:[function(require,module,exports){
 var Events;
 
 module.exports = Events = (function() {
-  function Events(_arg) {
+  function Events(arg) {
     var actions, horizontal, vertical;
-    this.parent = _arg.parent, this.view = _arg.view, horizontal = _arg.horizontal, vertical = _arg.vertical, actions = _arg.actions;
+    this.parent = arg.parent, this.view = arg.view, horizontal = arg.horizontal, vertical = arg.vertical, actions = arg.actions;
     this.doubleClickThreshold = 300;
     if (actions.pan) {
       this.pan();
@@ -732,9 +751,9 @@ module.exports = Events = (function() {
     });
   };
 
-  Events.prototype.resizeView = function(_arg) {
+  Events.prototype.resizeView = function(arg) {
     var $template, horizontal, positions, vertical;
-    horizontal = _arg.horizontal, vertical = _arg.vertical;
+    horizontal = arg.horizontal, vertical = arg.vertical;
     $template = $('<div>');
     $template.addClass('resize-handler');
     positions = [];
@@ -806,13 +825,12 @@ module.exports = Events = (function() {
 })();
 
 
-
 },{}],3:[function(require,module,exports){
 var Preview;
 
 module.exports = Preview = (function() {
-  function Preview(_arg) {
-    this.onReady = _arg.onReady, this.img = _arg.img, this.outline = _arg.outline;
+  function Preview(arg) {
+    this.onReady = arg.onReady, this.img = arg.img, this.outline = arg.outline;
     this.x = this.y = 0;
     this.width = this.height = 0;
     this.img.on('load', (function(_this) {
@@ -834,8 +852,8 @@ module.exports = Preview = (function() {
     })(this));
   }
 
-  Preview.prototype.setImage = function(_arg) {
-    this.url = _arg.url;
+  Preview.prototype.setImage = function(arg) {
+    this.url = arg.url;
     return this.img.attr('src', this.url);
   };
 
@@ -882,9 +900,9 @@ module.exports = Preview = (function() {
     });
   };
 
-  Preview.prototype.updateImageDimensions = function(_arg) {
+  Preview.prototype.updateImageDimensions = function(arg) {
     var height, width;
-    width = _arg.width, height = _arg.height;
+    width = arg.width, height = arg.height;
     this.width = width;
     this.height = height;
     if (this.outline) {
@@ -895,10 +913,10 @@ module.exports = Preview = (function() {
     }
   };
 
-  Preview.prototype.pan = function(_at_x, _at_y) {
+  Preview.prototype.pan = function(x1, y1) {
     var x, y;
-    this.x = _at_x;
-    this.y = _at_y;
+    this.x = x1;
+    this.y = y1;
     x = Math.round(this.x);
     y = Math.round(this.y);
     this.img.css({
@@ -916,16 +934,15 @@ module.exports = Preview = (function() {
 })();
 
 
-
 },{}],4:[function(require,module,exports){
 var Crop;
 
 Crop = require('./crop');
 
 module.exports = window.srcissors = {
-  "new": function(_arg) {
-    var actions, allowedActions, arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minWidth, outline, preview, url, view, zoomStep;
-    arena = _arg.arena, url = _arg.url, fixedWidth = _arg.fixedWidth, fixedHeight = _arg.fixedHeight, minWidth = _arg.minWidth, minHeight = _arg.minHeight, minRatio = _arg.minRatio, maxRatio = _arg.maxRatio, maxArea = _arg.maxArea, zoomStep = _arg.zoomStep, crop = _arg.crop, actions = _arg.actions;
+  "new": function(arg) {
+    var actions, allowedActions, arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minResolution, minWidth, outline, preview, url, view, zoomStep;
+    arena = arg.arena, url = arg.url, fixedWidth = arg.fixedWidth, fixedHeight = arg.fixedHeight, minWidth = arg.minWidth, minHeight = arg.minHeight, minRatio = arg.minRatio, maxRatio = arg.maxRatio, maxArea = arg.maxArea, zoomStep = arg.zoomStep, crop = arg.crop, actions = arg.actions, minResolution = arg.minResolution;
     arena = $(arena);
     view = arena.find('.crop-view');
     preview = view.find('.crop-preview');
@@ -967,11 +984,11 @@ module.exports = window.srcissors = {
       maxViewRatio: maxRatio,
       maxArea: maxArea,
       zoomStep: zoomStep,
-      actions: allowedActions
+      actions: allowedActions,
+      minResolution: minResolution
     });
   }
 };
-
 
 
 },{"./crop":1}]},{},[4]);
