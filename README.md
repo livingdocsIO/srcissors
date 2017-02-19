@@ -1,7 +1,7 @@
 # srcissors
 
 Image cropping for responsive images.
-(~4kB minified and gzipped)
+(~5kB minified and gzipped)
 
 ### Js
 
@@ -109,13 +109,19 @@ All the UI elements are styled with CSS. Just start with the CSS from `examples/
 
 ```bash
 # Watch for changes and fire up a webserver with livereload
-grunt dev
+npm run start
 
 # Run the tests with karma
-grunt test
+npm run test
+
+# Run the tests in the major browsers (Chrome,Firefox,Safari,Electron)
+npm run test:browsers
 
 # Run tests and build scrissors.js and scrissors.min.js
-grunt build
+npm run build
+
+# Publish the module to npm
+npm run build && npm version minor && git push && npm publish
 ```
 
 

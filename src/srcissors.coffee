@@ -1,3 +1,4 @@
+$ = require('jquery')
 Crop = require('./crop')
 
 module.exports = window.srcissors =

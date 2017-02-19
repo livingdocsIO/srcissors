@@ -1,3 +1,5 @@
+$ = require('jquery')
+
 module.exports = class Events
 
   constructor: ({ @parent, @view, horizontal, vertical, actions }) ->
