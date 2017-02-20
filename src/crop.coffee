@@ -1,3 +1,4 @@
+$ = require('jquery')
 Preview = require('./preview')
 Events = require('./events')
 

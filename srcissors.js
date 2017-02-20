@@ -1,6 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Crop, Events, Preview,
+(function (global){
+var $, Crop, Events, Preview,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 Preview = require('./preview');
 
@@ -675,8 +678,13 @@ module.exports = Crop = (function() {
 })();
 
 
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./events":2,"./preview":3}],2:[function(require,module,exports){
-var Events;
+(function (global){
+var $, Events;
+
+$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 module.exports = Events = (function() {
   function Events(arg) {
@@ -825,6 +833,8 @@ module.exports = Events = (function() {
 })();
 
 
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 var Preview;
 
@@ -934,8 +944,12 @@ module.exports = Preview = (function() {
 })();
 
 
+
 },{}],4:[function(require,module,exports){
-var Crop;
+(function (global){
+var $, Crop;
+
+$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 Crop = require('./crop');
 
@@ -991,4 +1005,6 @@ module.exports = window.srcissors = {
 };
 
 
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./crop":1}]},{},[4]);

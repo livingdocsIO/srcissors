@@ -1,3 +1,4 @@
+$ = require('jquery')
 srcissors = require('../../src/srcissors')
 
 template = """
