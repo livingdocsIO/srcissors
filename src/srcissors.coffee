@@ -5,7 +5,8 @@ module.exports = window.srcissors =
 
   new: ({
     arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
-    minRatio, maxRatio, maxArea, zoomStep, crop, actions, minResolution
+    minRatio, maxRatio, maxArea, zoomStep, crop, actions, minResolution,
+    surroundingImageOpacity, showSurroundingImage
   }) ->
     arena = $(arena)
     view = arena.find('.crop-view')
@@ -36,6 +37,8 @@ module.exports = window.srcissors =
       view: view # {jQuery Element}
       img: img # {jQuery Element}
       outline: outline # {jQuery Element or undefined}
+      showSurroundingImage: showSurroundingImage # {String} always|panning|never
+      surroundingImageOpacity: surroundingImageOpacity # {Number} e.g. in the 0.0 - 1.0 range
       fixedWidth: fixedWidth # {Number} e.g. 300
       fixedHeight: fixedHeight # {Number} e.g. 500
       minViewWidth: minWidth # {Number} e.g. 100

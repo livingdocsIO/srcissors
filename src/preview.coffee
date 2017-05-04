@@ -1,6 +1,8 @@
+$ = require('jquery')
+
 module.exports = class Preview
 
-  constructor: ({ @onReady, @img, @outline }) ->
+  constructor: ({ @onReady, @img, @opacity, @outline }) ->
     @x = @y = 0
     @width = @height = 0
 
@@ -16,6 +18,13 @@ module.exports = class Preview
 
   setImage: ({ @url }) ->
     @img.attr('src', @url)
+    @setBackgroundImage({url: @url}) if @outline
+
+  
+  setBackgroundImage: ({ url }) ->
+    if @opacity > 0
+      bg_img = $('<img>').css(opacity: @opacity).attr('src', url)
+      @outline.append(bg_img)
 
 
   reset: ->
@@ -24,7 +33,7 @@ module.exports = class Preview
     @width = @height = 0
     @img.attr('src', '')
     @img.css(width: '', height: '', transform: '')
-    @outline.css(transform: '') if @outline
+    @outline.css(transform: '').html('') if @outline
 
 
   setWidth: (width) ->

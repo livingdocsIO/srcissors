@@ -95,10 +95,13 @@
   transition: opacity 0.5s;
 }
 
+.crop-outline img {
+  width: 100%;
+}
+
 .crop-outline--active {
   opacity: 1;
 }
-
 
 /* Zoom Controls */
 
