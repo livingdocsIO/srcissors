@@ -1,3 +1,7 @@
+# v.1.2.0
+
+- Add `showSurroundingImage` and `surroundingImageOpacity` options [#9](https://github.com/upfrontIO/srcissors/pull/9)
+
 # v.1.1.0
 
 - Add a `minResolution` parameter [#6](https://github.com/upfrontIO/srcissors/pull/6)

@@ -11,8 +11,8 @@ Events = require('./events');
 
 module.exports = Crop = (function() {
   function Crop(arg) {
-    var crop, maxArea, url, zoomStep;
-    this.arena = arg.arena, this.view = arg.view, this.img = arg.img, this.outline = arg.outline, url = arg.url, this.fixedWidth = arg.fixedWidth, this.fixedHeight = arg.fixedHeight, this.minViewWidth = arg.minViewWidth, this.minViewHeight = arg.minViewHeight, this.minViewRatio = arg.minViewRatio, this.maxViewRatio = arg.maxViewRatio, crop = arg.crop, zoomStep = arg.zoomStep, maxArea = arg.maxArea, this.actions = arg.actions, this.minResolution = arg.minResolution;
+    var crop, maxArea, showSurroundingImage, url, zoomStep;
+    this.arena = arg.arena, this.view = arg.view, this.img = arg.img, this.outline = arg.outline, url = arg.url, this.fixedWidth = arg.fixedWidth, this.fixedHeight = arg.fixedHeight, this.minViewWidth = arg.minViewWidth, this.minViewHeight = arg.minViewHeight, this.minViewRatio = arg.minViewRatio, this.maxViewRatio = arg.maxViewRatio, crop = arg.crop, zoomStep = arg.zoomStep, maxArea = arg.maxArea, this.actions = arg.actions, this.minResolution = arg.minResolution, this.surroundingImageOpacity = arg.surroundingImageOpacity, showSurroundingImage = arg.showSurroundingImage;
     this.onPreviewReady = bind(this.onPreviewReady, this);
     this.loadingCssClass = 'crop-view--is-loading';
     this.panningCssClass = 'crop-view--is-panning';
@@ -29,10 +29,14 @@ module.exports = Crop = (function() {
     if (maxArea) {
       this.maxArea = (this.arenaWidth * this.arenaHeight) * maxArea;
     }
+    if (this.outline) {
+      this.setSurroundingImageVisibility(showSurroundingImage);
+    }
     this.preview = new Preview({
       onReady: this.onPreviewReady,
       img: this.img,
-      outline: this.outline
+      outline: this.outline,
+      opacity: this.surroundingImageOpacity
     });
     this.setImage(url);
   }
@@ -58,6 +62,18 @@ module.exports = Crop = (function() {
     return this.preview.setImage({
       url: url
     });
+  };
+
+  Crop.prototype.setSurroundingImageVisibility = function(visibility) {
+    this.surroundingImageOpacity = parseFloat(this.surroundingImageOpacity || 0.2);
+    if (visibility === 'always') {
+      return this.outline.css('opacity', 1.0);
+    } else if (visibility === 'panning') {
+      return this.outline.css('opacity', null);
+    } else {
+      this.outline.css('opacity', 0);
+      return this.surroundingImageOpacity = 0;
+    }
   };
 
   Crop.prototype.reset = function() {
@@ -678,7 +694,6 @@ module.exports = Crop = (function() {
 })();
 
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./events":2,"./preview":3}],2:[function(require,module,exports){
 (function (global){
@@ -833,14 +848,16 @@ module.exports = Events = (function() {
 })();
 
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
-var Preview;
+(function (global){
+var $, Preview;
+
+$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 module.exports = Preview = (function() {
   function Preview(arg) {
-    this.onReady = arg.onReady, this.img = arg.img, this.outline = arg.outline;
+    this.onReady = arg.onReady, this.img = arg.img, this.opacity = arg.opacity, this.outline = arg.outline;
     this.x = this.y = 0;
     this.width = this.height = 0;
     this.img.on('load', (function(_this) {
@@ -864,7 +881,23 @@ module.exports = Preview = (function() {
 
   Preview.prototype.setImage = function(arg) {
     this.url = arg.url;
-    return this.img.attr('src', this.url);
+    this.img.attr('src', this.url);
+    if (this.outline) {
+      return this.setBackgroundImage({
+        url: this.url
+      });
+    }
+  };
+
+  Preview.prototype.setBackgroundImage = function(arg) {
+    var bg_img, url;
+    url = arg.url;
+    if (this.opacity > 0) {
+      bg_img = $('<img>').css({
+        opacity: this.opacity
+      }).attr('src', url);
+      return this.outline.append(bg_img);
+    }
   };
 
   Preview.prototype.reset = function() {
@@ -880,7 +913,7 @@ module.exports = Preview = (function() {
     if (this.outline) {
       return this.outline.css({
         transform: ''
-      });
+      }).html('');
     }
   };
 
@@ -944,7 +977,7 @@ module.exports = Preview = (function() {
 })();
 
 
-
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
 (function (global){
 var $, Crop;
@@ -955,8 +988,8 @@ Crop = require('./crop');
 
 module.exports = window.srcissors = {
   "new": function(arg) {
-    var actions, allowedActions, arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minResolution, minWidth, outline, preview, url, view, zoomStep;
-    arena = arg.arena, url = arg.url, fixedWidth = arg.fixedWidth, fixedHeight = arg.fixedHeight, minWidth = arg.minWidth, minHeight = arg.minHeight, minRatio = arg.minRatio, maxRatio = arg.maxRatio, maxArea = arg.maxArea, zoomStep = arg.zoomStep, crop = arg.crop, actions = arg.actions, minResolution = arg.minResolution;
+    var actions, allowedActions, arena, crop, fixedHeight, fixedWidth, img, maxArea, maxRatio, minHeight, minRatio, minResolution, minWidth, outline, preview, showSurroundingImage, surroundingImageOpacity, url, view, zoomStep;
+    arena = arg.arena, url = arg.url, fixedWidth = arg.fixedWidth, fixedHeight = arg.fixedHeight, minWidth = arg.minWidth, minHeight = arg.minHeight, minRatio = arg.minRatio, maxRatio = arg.maxRatio, maxArea = arg.maxArea, zoomStep = arg.zoomStep, crop = arg.crop, actions = arg.actions, minResolution = arg.minResolution, surroundingImageOpacity = arg.surroundingImageOpacity, showSurroundingImage = arg.showSurroundingImage;
     arena = $(arena);
     view = arena.find('.crop-view');
     preview = view.find('.crop-preview');
@@ -990,6 +1023,8 @@ module.exports = window.srcissors = {
       view: view,
       img: img,
       outline: outline,
+      showSurroundingImage: showSurroundingImage,
+      surroundingImageOpacity: surroundingImageOpacity,
       fixedWidth: fixedWidth,
       fixedHeight: fixedHeight,
       minViewWidth: minWidth,
@@ -1003,7 +1038,6 @@ module.exports = window.srcissors = {
     });
   }
 };
-
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
