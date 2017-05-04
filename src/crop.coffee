@@ -7,7 +7,8 @@ module.exports = class Crop
   constructor: ({
       @arena, @view, @img, @outline, url, @fixedWidth, @fixedHeight,
       @minViewWidth, @minViewHeight, @minViewRatio, @maxViewRatio, crop
-      zoomStep, maxArea, @actions, @minResolution
+      zoomStep, maxArea, @actions, @minResolution, @surroundingImageOpacity,
+      showSurroundingImage
     }) ->
 
       # CSS classes
@@ -38,10 +39,13 @@ module.exports = class Crop
       # be more reliable.
       @maxArea = (@arenaWidth * @arenaHeight) * maxArea if maxArea
 
+      @setSurroundingImageVisibility(showSurroundingImage) if @outline
+
       @preview = new Preview
         onReady: @onPreviewReady
         img: @img
         outline: @outline
+        opacity: @surroundingImageOpacity
 
       @setImage(url)
 
@@ -59,6 +63,20 @@ module.exports = class Crop
     @initializeReadyState()
     @view.addClass(@loadingCssClass)
     @preview.setImage({ url })
+
+  
+  setSurroundingImageVisibility: (visibility) ->
+    # visibility: always|panning|never
+    # override opacity in crop-outline--active css class
+    @surroundingImageOpacity = parseFloat(@surroundingImageOpacity || 0.2)
+
+    if visibility == 'always'
+      @outline.css('opacity', 1.0)
+    else if visibility == 'panning'
+      @outline.css('opacity', null)
+    else # 'never' default
+      @outline.css('opacity', 0)
+      @surroundingImageOpacity = 0
 
 
   reset: ->

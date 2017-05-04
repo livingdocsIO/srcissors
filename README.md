@@ -71,6 +71,8 @@ cropper.on('change', function(crop) {
 | `maxArea` | Number | e.g. `0.8` means max 80% of the area will be covered by the image. This makes for smoth transitions between wide and tall image formats. |
 | `zoomStep` | Number | e.g. `1.25` means every zoom will enlarge the preview by 25%. |
 | `actions` | Object | {pan, zoomOnDoubleClick, resize } Allowed user interactions. By default they are all set to `true`. |
+| `showSurroundingImage` | String | {always, never, panning } Shows the uncropped part of the image. By default set to `never`. |
+| `surroundingImageOpacity` | Number | {0.0 - 1.0} Sets the opacity when showing the uncropped part of the image. By default set to `0.2`. |
 
 ### HTML
 

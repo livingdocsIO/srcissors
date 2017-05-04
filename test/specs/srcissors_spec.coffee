@@ -4,6 +4,7 @@ srcissors = require('../../src/srcissors')
 template = """
   <div class="crop-arena">
     <div class="crop-view">
+      <div class="crop-outline"></div>
 
       <!-- image -->
       <div class="crop-preview"></div>
@@ -200,3 +201,91 @@ describe 'srcissors', ->
           height: 300
 
         done()
+    
+  describe 'with surrounding image always enabled', ->
+
+    beforeEach (done) ->
+      @arena = $(template)
+      @arena.css(width: 100, height: 100)
+      $(document.body).append(@arena)
+
+      # Crop a 400x300 image
+      @crop = srcissors.new
+        arena: @arena
+        url: 'base/test/images/diagonal.jpg'
+        showSurroundingImage: 'always'
+        surroundingImageOpacity: 0.4
+      @crop.on 'ready', done
+
+
+    afterEach ->
+      @arena.remove()
+
+
+    it 'has initialized the crop outline background correctly', ->
+      outline = @arena.find('.crop-outline')
+      bgImg = outline.find('img')
+
+      expect(bgImg.length).to.equal(1)
+      expect(bgImg.get(0).style.opacity).to.equal('0.4')
+      expect(outline.get(0).style.opacity).to.equal('1')
+
+
+    it 'cleans up the crop outline when setting a different image', ->
+      @crop.setImage('base/test/images/berge.jpg')
+
+      bgImg = @arena.find('.crop-outline img')
+      expect(bgImg.length).to.equal(1)
+
+  describe 'with surrounding image enabled when panning', ->
+
+    beforeEach (done) ->
+      @arena = $(template)
+      @arena.css(width: 100, height: 100)
+      $(document.body).append(@arena)
+
+      # Crop a 400x300 image
+      @crop = srcissors.new
+        arena: @arena
+        url: 'base/test/images/diagonal.jpg'
+        showSurroundingImage: 'panning'
+      @crop.on 'ready', done
+
+
+    afterEach ->
+      @arena.remove()
+
+
+    it 'has initialized the crop outline background correctly', ->
+      outline = @arena.find('.crop-outline')
+      bgImg = outline.find('img')
+
+      expect(bgImg.length).to.equal(1)
+      expect(bgImg.get(0).style.opacity).to.equal('0.2')
+      expect(outline.get(0).style.opacity).to.equal('')
+
+
+  describe 'with surrounding image disabled by default', ->
+
+    beforeEach ->
+      @arena = $(template)
+      @arena.css(width: 100, height: 100)
+      $(document.body).append(@arena)
+
+
+    afterEach ->
+      @arena.remove()
+
+
+    it 'omits the background image without surrounding image config', (done) ->
+      @crop = srcissors.new
+        arena: @arena
+        url: 'base/test/images/diagonal.jpg'
+      @crop.on 'ready', done
+
+      outline = @arena.find('.crop-outline')
+      bgImg = outline.find('img')
+
+      expect(bgImg.length).to.equal(0)
+      expect(outline.get(0).style.opacity).to.equal('0')
+    
