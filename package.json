@@ -30,6 +30,7 @@
   "devDependencies": {
     "browserify": "^14.1.0",
     "browserify-shim": "^3.8.13",
+    "budo": "^10.0.3",
     "chai": "^3.5.0",
     "coffeeify": "^2.1.0",
     "electron": "^1.4.15",
