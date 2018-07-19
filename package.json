@@ -1,9 +1,9 @@
 {
   "name": "srcissors",
   "version": "1.2.0",
-  "homepage": "https://github.com/upfrontIO/srcissors",
+  "homepage": "https://github.com/livingdocsIO/srcissors",
   "description": "Image cropping for responsive images",
-  "author": "upfront.io",
+  "author": "Livingdocs <dev@livingdocs.io>",
   "license": "LGPL-3.0+",
   "scripts": {
     "test": "karma start",
@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/upfrontIO/srcissors.git"
+    "url": "git://github.com/livingdocsIO/srcissors.git"
   },
   "browser": "src/srcissors.coffee",
   "main": "src/srcissors.coffee",
