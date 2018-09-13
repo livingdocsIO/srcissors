@@ -16,6 +16,12 @@ module.exports = function (config) {
     browsers: ['Electron'],
     captureTimeout: 20000,
     autoWatch: true,
-    singleRun: true
+    singleRun: true,
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    }
   })
 }
