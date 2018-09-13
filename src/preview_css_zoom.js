@@ -53,7 +53,7 @@ module.exports = class Preview {
 
   transform ($elem) {
     if (!$elem) return
-    $elem.css({transform: `scale(${this.scaleFactor}) translate(-${this.x / this.scaleFactor}px, -${this.y / this.scaleFactor}px)`})
+    $elem.css({transform: `scale(${this.scaleFactor}) translate(-${this.x / this.scaleFactor}px, -${this.y / this.scaleFactor}px)`}) // eslint-disable-line max-len
   }
 
   updateImageDimensions () {

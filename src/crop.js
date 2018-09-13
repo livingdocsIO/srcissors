@@ -49,9 +49,9 @@ module.exports = class Crop {
     // todo: consider to calculate maxArea with regards to the
     // maximum space an image can within the area. That should
     // be more reliable.
-    if (maxArea) { this.maxArea = (this.arenaWidth * this.arenaHeight) * maxArea }
+    if (maxArea) this.maxArea = (this.arenaWidth * this.arenaHeight) * maxArea
 
-    if (this.outline) { this.setSurroundingImageVisibility(showSurroundingImage) }
+    if (this.outline) this.setSurroundingImageVisibility(showSurroundingImage)
 
     this.preview = new Preview({
       onReady: this.onPreviewReady,
@@ -266,16 +266,16 @@ module.exports = class Crop {
 
     if (['top', 'bottom'].includes(position)) {
       dy = 2 * dy // Because it's centered we need to change width by factor two
-      return this.resize({width: this.viewWidth, height: this.viewHeight + dy, keepDimension: 'height'})
+      this.resize({width: this.viewWidth, height: this.viewHeight + dy, keepDimension: 'height'})
     } else if (['left', 'right'].includes(position)) {
       dx = 2 * dx
-      return this.resize({width: this.viewWidth + dx, height: this.viewHeight, keepDimension: 'width'})
+      this.resize({width: this.viewWidth + dx, height: this.viewHeight, keepDimension: 'width'})
     }
   }
 
   onResizeEnd () {
     this.isResizing = false
-    return this.resizeFocusPoint = undefined
+    this.resizeFocusPoint = undefined
   }
 
   resize ({width, height, keepDimension}) {
@@ -314,7 +314,7 @@ module.exports = class Crop {
       this.maxImageHeight = (this.viewHeight / minZoomPixelHeight) * this.imageHeight
     }
 
-    return this.fireChange()
+    this.fireChange()
   }
 
   // Update view
@@ -362,7 +362,7 @@ module.exports = class Crop {
       this.fireChange()
     }
 
-    return this.focus(focusPoint)
+    this.focus(focusPoint)
   }
 
   // returns {Object} e.g. percentX: 0.2, percentY: 0.5
@@ -621,7 +621,7 @@ module.exports = class Crop {
       previewXy: `${r(this.preview.x)}x${r(this.preview.y)}`
     }
 
-    console.log(obj)
+    console.log(obj) // eslint-disable-line no-console
     return obj
   }
 }
