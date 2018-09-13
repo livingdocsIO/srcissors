@@ -9,7 +9,7 @@ module.exports = {
     libraryTarget: 'umd'
   },
   externals: {
-    jquery : {
+    jquery: {
       commonjs: 'jquery',
       commonjs2: 'jquery',
       amd: 'jquery',
