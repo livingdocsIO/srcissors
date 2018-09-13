@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width">
 
     <!--  css -->
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/page.css">
-    <link rel="stylesheet" href="/css/srcissors.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/page.css">
+    <link rel="stylesheet" href="css/srcissors.css">
   </head>
   <body>
     <div class="clip-content">
@@ -40,14 +40,14 @@
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
     <!-- srcissors. yeah! -->
-    <script src="/srcissors.js"></script>
+    <script src="srcissors.js"></script>
 
     <script>
 
       $(document).ready(function() {
         var crop = window.c = srcissors.new({
           arena: $('.crop-arena'),
-          url: "/images/16x9.png",
+          url: "images/16x9.png",
           // The image is 1600 * 900, for demo, we chose 1/4 of the resolution
           minResolution: 800 * 450
         });

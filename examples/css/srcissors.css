@@ -59,7 +59,7 @@
   width: 50px;
   height: 50px;
 
-  background: transparent url('/assets/spinner.svg') center center no-repeat;
+  background: transparent url('../assets/spinner.svg') center center no-repeat;
 
   background-size: cover;
 
@@ -156,7 +156,7 @@
 
 
 .icon-zoom {
-  background-image: url('/assets/zoom-icons@2x.png');
+  background-image: url('../assets/zoom-icons@2x.png');
   /* set size to half of the @2x image */
   background-size: 26px 52px;
   content: '';

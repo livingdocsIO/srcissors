@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width">
 
     <!--  css -->
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/page.css">
-    <link rel="stylesheet" href="/css/srcissors.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/page.css">
+    <link rel="stylesheet" href="css/srcissors.css">
   </head>
   <body>
     <div class="clip-content">
@@ -45,13 +45,13 @@
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
     <!-- srcissors. yeah! -->
-    <script src="/srcissors.js"></script>
+    <script src="srcissors.js"></script>
 
     <script>
       $(document).ready(function() {
         var crop = srcissors.new({
           arena: $('.crop-arena'),
-          url: "/images/diagonal.jpg",
+          url: "images/diagonal.jpg",
           fixedWidth: 300,
           minRatio: 1 / 1.5,
           maxRatio: 1.5 / 1,
@@ -81,7 +81,7 @@
         });
 
         $('.swap-image').on('click', function(event) {
-          crop.setImage('/images/storytelling-painting.jpg');
+          crop.setImage('images/storytelling-painting.jpg');
           event.preventDefault();
         });
 
