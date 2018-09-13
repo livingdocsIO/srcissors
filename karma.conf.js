@@ -1,14 +1,15 @@
 module.exports = function (config) {
   config.set({
-    frameworks: ['mocha', 'sinon-chai', 'browserify'],
-    files: ['./test/specs/*.coffee', {pattern: './test/**/*', included: false}],
+    frameworks: ['mocha', 'sinon-chai'],
+    files: [
+      {pattern: './test/specs/*.js', watched: false},
+      // expose files to tests
+      {pattern: './test/**/*', included: false}
+    ],
     preprocessors: {
-      './test/specs/*': ['browserify']
+      './test/specs/*': ['webpack']
     },
-    browserify: {
-      transform: ['coffeeify'],
-      extensions: ['.js', '.coffee']
-    },
+    webpack: {mode: 'production'},
     port: 8080,
     reporters: ['dots'],
     logLevel: config.LOG_INFO,

@@ -1,24 +1,23 @@
 const $ = require('jquery')
 const srcissors = require('../../src/srcissors')
 
-const template = `\
-<div class="crop-arena">
-  <div class="crop-view">
-    <div class="crop-outline"></div>
+const template = `
+  <div class="crop-arena">
+    <div class="crop-view">
+      <div class="crop-outline"></div>
 
-    <!-- image -->
-    <div class="crop-preview"></div>
+      <!-- image -->
+      <div class="crop-preview"></div>
 
+    </div>
   </div>
-</div>\
 `
 
 describe('srcissors', function () {
 
   it('creates a new instance', function () {
     const html = $(template)
-    const crop = srcissors.new({
-      arena: html})
+    const crop = srcissors.new({arena: html})
 
     expect(crop).to.exist
   })
@@ -33,7 +32,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg'
+        url: '/base/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
     })
@@ -60,7 +59,7 @@ describe('srcissors', function () {
       })
     })
 
-    describe('zoom()', () =>
+    describe('zoom()', () => {
 
       // Zoom a 400x300 image by factor 2 in an arena of 100x100
       // The view should keep the images aspect ratio and have a size of 100x75
@@ -77,10 +76,9 @@ describe('srcissors', function () {
           done()
         })
       })
-    )
+    })
 
-    describe('setRatio()', () =>
-
+    describe('setRatio()', () => {
       it('sets a square ratio', function (done) {
         this.crop.setRatio(1)
         this.crop.on('change', function (crop) {
@@ -94,7 +92,7 @@ describe('srcissors', function () {
           done()
         })
       })
-    )
+    })
 
     describe('setImage()', function () {
 
@@ -102,7 +100,7 @@ describe('srcissors', function () {
         this.crop.on('load', done)
 
         // Set a different 300x400 image
-        this.crop.setImage('base/test/images/berge.jpg')
+        this.crop.setImage('/base/test/images/berge.jpg')
       })
 
       it('sets the new image dimensions', function () {
@@ -111,7 +109,7 @@ describe('srcissors', function () {
       })
     })
 
-    describe('reset()', () =>
+    describe('reset()', () => {
 
       it('resets the zoom and ratio to the original', function () {
         this.crop.setRatio(1)
@@ -124,7 +122,7 @@ describe('srcissors', function () {
           height: 300
         })
       })
-    )
+    })
   })
 
   describe('with a 100x200 arena', function () {
@@ -137,7 +135,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg'
+        url: '/base/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
     })
@@ -151,7 +149,7 @@ describe('srcissors', function () {
       expect(this.crop.viewHeight).to.equal(75)
     })
 
-    describe('setRatio()', () =>
+    describe('setRatio()', () => {
 
       it('sets a square ratio', function (done) {
         this.crop.setRatio(1)
@@ -166,7 +164,7 @@ describe('srcissors', function () {
           done()
         })
       })
-    )
+    })
   })
 
   describe('when it is loading the image', function () {
@@ -179,7 +177,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg'
+        url: '/base/test/images/diagonal.jpg'
       })
     })
 
@@ -238,7 +236,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg',
+        url: '/base/test/images/diagonal.jpg',
         showSurroundingImage: 'always',
         surroundingImageOpacity: 0.4
       })
@@ -259,7 +257,7 @@ describe('srcissors', function () {
     })
 
     it('cleans up the crop outline when setting a different image', function () {
-      this.crop.setImage('base/test/images/berge.jpg')
+      this.crop.setImage('/base/test/images/berge.jpg')
 
       const bgImg = this.arena.find('.crop-outline img')
       expect(bgImg.length).to.equal(1)
@@ -276,7 +274,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg',
+        url: '/base/test/images/diagonal.jpg',
         showSurroundingImage: 'panning'
       })
       this.crop.on('ready', done)
@@ -311,7 +309,7 @@ describe('srcissors', function () {
     it('omits the background image without surrounding image config', function (done) {
       this.crop = srcissors.new({
         arena: this.arena,
-        url: 'base/test/images/diagonal.jpg'
+        url: '/base/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
 
