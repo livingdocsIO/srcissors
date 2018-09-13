@@ -7,11 +7,16 @@
   "license": "LGPL-3.0+",
   "scripts": {
     "test": "karma start",
+    "test:ci": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
     "test:watch": "karma start --no-single-run",
     "test:browsers": "karma start --browsers Chrome,Firefox,Safari,Electron",
     "start": "webpack-dev-server --open --content-base examples",
     "build": "webpack && cp -R ./srcissors.* ./examples/"
   },
+  "files": [
+    "srcissors.js",
+    "srcissors.js.map"
+  ],
   "keywords": [
     "crop",
     "image"
