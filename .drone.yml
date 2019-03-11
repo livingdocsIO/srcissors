@@ -1,28 +1,43 @@
+---
+kind: pipeline
+name: default
+
 clone:
-  git:
-    image: plugins/git
-    depth: 50
-    tags: true
+  depth: 50
 
-pipeline:
-  npm-install:
-    group: install
-    image: livingdocs/editor-base:8.2
-    commands: ["npm install"]
+steps:
+- name: eslint
+  image: marcbachmann/eslint:4.19.1
+  environment:
+    GH_TOKEN:
+      from_secret: GH_TOKEN
 
-  eslint:
-    group: install
-    image: marcbachmann/eslint:4.19.1
-    secrets: [gh_token]
+- name: npm-install
+  image: livingdocs/editor-base:8.2
+  commands: ["npm install"]
 
-  test:
-    group: test
-    image: livingdocs/editor-base:8.2
-    commands: ["npm run test:ci -s"]
+- name: test
+  image: livingdocs/editor-base:8.2
+  commands: ["npm run test:ci -s"]
 
-  release:
-    group: publish
-    image: marcbachmann/semantic-release:15.1.3
-    secrets: [gh_token, npm_token]
-    when:
-      event: push
+- name: set-build-info
+  image: node:10
+  commands: ["npx set-ci"]
+
+- name: pre-release
+  image: livingdocs/editor-base:8.2
+  commands: ["git fetch --tags"]
+
+- name: release
+  image: marcbachmann/semantic-release:15.1.3
+  environment:
+    GH_TOKEN:
+      from_secret: GH_TOKEN
+    NPM_TOKEN:
+      from_secret: NPM_TOKEN
+
+---
+kind: signature
+hmac: 9ad6f76e9c3ac7e84b8eed453efffd7068c2c3511a36661062ce77795af9ebc5
+
+...
