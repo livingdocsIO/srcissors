@@ -36,8 +36,10 @@ steps:
     NPM_TOKEN:
       from_secret: NPM_TOKEN
 
+trigger:
+  event: [push]
 ---
 kind: signature
-hmac: 9ad6f76e9c3ac7e84b8eed453efffd7068c2c3511a36661062ce77795af9ebc5
+hmac: 2c74a33a5080dae6dd718539c2a3dbf4662609791c5a8d6ba5c7001a9918226b
 
 ...
