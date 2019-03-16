@@ -20,16 +20,8 @@ steps:
   image: livingdocs/editor-base:8.2
   commands: ["npm run test:ci -s"]
 
-- name: set-build-info
-  image: node:10
-  commands: ["npx set-ci"]
-
-- name: pre-release
-  image: livingdocs/editor-base:8.2
-  commands: ["git fetch --tags"]
-
 - name: release
-  image: marcbachmann/semantic-release:15.1.3
+  image: livingdocs/semantic-release:v1.0.0
   environment:
     GH_TOKEN:
       from_secret: GH_TOKEN
@@ -40,6 +32,6 @@ trigger:
   event: [push]
 ---
 kind: signature
-hmac: 2c74a33a5080dae6dd718539c2a3dbf4662609791c5a8d6ba5c7001a9918226b
+hmac: f4880f26443a82eb8fb348304ec841357b27765613d36a20e1841a212c0a55aa
 
 ...

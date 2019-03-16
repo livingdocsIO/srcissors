@@ -55,5 +55,8 @@
   },
   "engines": {
     "node": ">=6"
+  },
+  "release": {
+    "extends": "@livingdocs/semantic-release-presets/npm-github"
   }
 }
