@@ -7,7 +7,7 @@ module.exports = class Crop {
     arena, view, img, outline, url, fixedWidth, fixedHeight,
     minViewWidth, minViewHeight, minViewRatio, maxViewRatio, crop,
     zoomStep, maxArea, actions, minResolution, surroundingImageOpacity,
-    showSurroundingImage
+    showSurroundingImage, centerImage
   }) {
     // CSS classes
     this.onPreviewReady = this.onPreviewReady.bind(this)
@@ -31,6 +31,7 @@ module.exports = class Crop {
     // State
     this.isPanning = false
     this.initialCrop = crop
+    this.centerImage = typeof centerImage === 'boolean' ? centerImage : true
 
     // Events
     this.loadEvent = $.Callbacks()
@@ -154,7 +155,7 @@ module.exports = class Crop {
       this.setCrop(this.initialCrop)
     } else {
       this.zoomAllOut()
-      this.center()
+      if (this.centerImage) this.center()
     }
 
     this.isInitialized = true

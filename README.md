@@ -64,6 +64,7 @@ cropper.on('change', function(crop) {
 | `arena` | jQuery element |  |
 | `url` | String | Url of the image to load |
 | `crop` | Object | {x, y, width, height} Initial crop. The same as calling `setCrop()` |
+| `centerImage` | Boolean | Centers the image after initialization. Default: true
 | `minResolution` | The minimal resolution required from the resulting image. |
 | `fixedWidth`, `fixedHeight` | Number | Will fix the preview width and only allow for resizes in the other axis. |
 | `minWidth`, `minHeight` | Number | Minimum width or height the preview can be. |
