@@ -65,12 +65,12 @@
           height: 500
         })
 
-        $('.icon-zoom-in').on('click', function(event) {
+        $('.icon-zoom-in').on('click touchstart', function(event) {
           crop.zoomIn();
           event.stopPropagation();
         });
 
-        $('.icon-zoom-out').on('click', function(event) {
+        $('.icon-zoom-out').on('click touchstart', function(event) {
           crop.zoomOut();
           event.stopPropagation();
         });

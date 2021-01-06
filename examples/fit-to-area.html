@@ -56,12 +56,12 @@
           minRatio: 1 / 1.5
         });
 
-        $('.icon-zoom-in').on('click', function(event) {
+        $('.icon-zoom-in').on('mouseup touchstart', function(event) {
           crop.zoomIn();
           event.stopPropagation();
         });
 
-        $('.icon-zoom-out').on('click', function(event) {
+        $('.icon-zoom-out').on('mouseup touchstart', function(event) {
           crop.zoomOut();
           event.stopPropagation();
         });

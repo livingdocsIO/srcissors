@@ -1,5 +1,15 @@
 const $ = require('jquery')
 
+const getPageCoordinates = function (event) {
+  if (event.type.includes('touch')) {
+    return {
+      pageX: event.originalEvent.changedTouches[0].pageX,
+      pageY: event.originalEvent.changedTouches[0].pageY
+    }
+  }
+  return {pageX: event.pageX, pageY: event.pageY}
+}
+
 module.exports = class Events {
   constructor ({parent, view, horizontal, vertical, actions}) {
     this.parent = parent
@@ -22,20 +32,22 @@ module.exports = class Events {
 
   pan () {
     const $doc = $(document)
-    this.view.on('mousedown.srcissors', (e1) => {
+    this.view.on('mousedown.srcissors touchstart.srcissors', (e1) => {
       const panData = {
         startX: this.parent.preview.x,
         startY: this.parent.preview.y
       }
 
       e1.preventDefault()
-      $doc.on('mousemove.srcissors-pan', (e2) => {
-        panData.dx = e2.pageX - e1.pageX
-        panData.dy = e2.pageY - e1.pageY
+      $doc.on('mousemove.srcissors-pan touchmove.srcissors-pan', (e2) => {
+        const {pageX, pageY} = getPageCoordinates(e2)
+        const {pageX: prevPageX, pageY: prevPageY} = getPageCoordinates(e1)
+        panData.dx = pageX - prevPageX
+        panData.dy = pageY - prevPageY
         this.parent.onPan(panData)
-      }).on('mouseup.srcissors-pan', () => {
-        $doc.off('mouseup.srcissors-pan')
-        $doc.off('mousemove.srcissors-pan')
+      }).on('mouseup.srcissors-pan touchend.srcissors-pan', () => {
+        $doc.off('mouseup.srcissors-pan touchend.srcissors-pan')
+        $doc.off('mousemove.srcissors-pan touchmove.srcissors-pan')
 
         // only trigger panEnd if pan has been called
         if (panData.dx != null) this.parent.onPanEnd()
@@ -46,10 +58,10 @@ module.exports = class Events {
   doubleClick () {
     let lastClick
 
-    this.view.on('mousedown.srcissors', event => {
+    this.view.on('mousedown.srcissors touchstart.srcissors', event => {
       const now = new Date().getTime()
       if (lastClick && (lastClick > (now - this.doubleClickThreshold))) {
-        this.parent.onDoubleClick({pageX: event.pageX, pageY: event.pageY})
+        this.parent.onDoubleClick(getPageCoordinates(event))
       }
       lastClick = now
     })
@@ -73,7 +85,7 @@ module.exports = class Events {
     positions.forEach(position => {
       const $handler = $template.clone()
       $handler.addClass(`resize-handler-${position}`)
-      $handler.on('mousedown.srcissors', this.getResizeMouseDown(position))
+      $handler.on('mousedown.srcissors touchstart.srcissors', this.getResizeMouseDown(position))
 
       this.view.append($handler)
     })
@@ -83,30 +95,29 @@ module.exports = class Events {
     const $doc = $(document)
 
     return (event) => {
-      let lastX = event.pageX
-      let lastY = event.pageY
-
+      let {pageX: lastX, pageY: lastY} = getPageCoordinates(event)
       event.stopPropagation()
 
-      $doc.on('mousemove.srcissors-resize', e2 => {
+      $doc.on('mousemove.srcissors-resize touchmove.srcissors-resize', e2 => {
         let dx, dy
+        const {pageX, pageY} = getPageCoordinates(e2)
         switch (position) {
           case 'top': case 'bottom':
-            dy = e2.pageY - lastY
+            dy = pageY - lastY
             if (position === 'top') { dy = -dy }
-            lastY = e2.pageY
+            lastY = pageY
             break
           case 'left': case 'right':
-            dx = e2.pageX - lastX
+            dx = pageX - lastX
             if (position === 'left') { dx = -dx }
-            lastX = e2.pageX
+            lastX = pageX
             break
         }
 
         this.parent.onResize({position, dx, dy})
-      }).on('mouseup.srcissors-resize', () => {
-        $doc.off('mouseup.srcissors-resize')
-        $doc.off('mousemove.srcissors-resize')
+      }).on('mouseup.srcissors-resize touchend.srcissors-resize', () => {
+        $doc.off('mouseup.srcissors-resize touchmove.srcissors-resize')
+        $doc.off('mousemove.srcissors-resize touchend.srcissors-resize')
 
         // only trigger panEnd if pan has been called
         this.parent.onResizeEnd({position})
