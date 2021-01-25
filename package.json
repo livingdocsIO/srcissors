@@ -10,7 +10,7 @@
     "test:ci": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
     "test:watch": "karma start --no-single-run",
     "test:browsers": "karma start --browsers Chrome,Firefox,Safari,Electron",
-    "start": "webpack-dev-server --open --content-base examples",
+    "start": "webpack-dev-server -d --open --content-base examples",
     "build": "webpack && cp -R ./srcissors.* ./examples/"
   },
   "files": [
