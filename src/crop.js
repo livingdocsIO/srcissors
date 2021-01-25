@@ -5,7 +5,7 @@ const Events = require('./events')
 module.exports = class Crop {
   constructor ({
     arena, view, img, outline, url, fixedWidth, fixedHeight,
-    minViewWidth, minViewHeight, minViewRatio, maxViewRatio, crop,
+    minViewWidth, minViewHeight, minViewRatio, maxViewRatio, originalSize, crop,
     zoomStep, maxArea, actions, minResolution, surroundingImageOpacity,
     showSurroundingImage
   }) {
@@ -21,6 +21,7 @@ module.exports = class Crop {
     this.minViewHeight = minViewHeight
     this.minViewRatio = minViewRatio
     this.maxViewRatio = maxViewRatio
+    this.originalSize = originalSize
     this.actions = actions
     this.minResolution = minResolution
     this.surroundingImageOpacity = surroundingImageOpacity
@@ -102,7 +103,13 @@ module.exports = class Crop {
     this.zoomAllOut()
   }
 
-  onPreviewReady ({width, height}) {
+  onPreviewReady (previewImageSize) {
+    this.checkRatio(previewImageSize)
+    const {width, height} = this.originalSize || previewImageSize
+
+    // console.log(this.originalSize, previewImageSize, {width, height})
+    this.preview.updateImageDimensions({width, height})
+
     let keepDimension
     if (!this.isInitialized) {
       this.events = new Events({
@@ -530,6 +537,18 @@ module.exports = class Crop {
     }
 
     return {width, height}
+  }
+
+  checkRatio (previewImageSize) {
+    if (this.originalSize) {
+      const expectedRatio = this.originalSize.width / this.originalSize.height
+      const actualRatio = previewImageSize.width / previewImageSize.height
+      const percentageChange = ((actualRatio - expectedRatio) / expectedRatio) * 100
+      if (Math.abs(percentageChange) > 1) {
+        throw new Error(`srcissors: Displayed image has a different image ratio than the ` +
+                        `one configured in 'originalRatio': ${expectedRatio} vs ${actualRatio}`)
+      }
+    }
   }
 
   // Calculations

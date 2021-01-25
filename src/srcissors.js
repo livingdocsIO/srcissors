@@ -4,7 +4,7 @@ const Crop = require('./crop')
 module.exports = {
   new ({
     arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
-    minRatio, maxRatio, maxArea, zoomStep, crop, actions, minResolution,
+    minRatio, maxRatio, maxArea, originalSize, zoomStep, crop, actions, minResolution,
     surroundingImageOpacity, showSurroundingImage
   }) {
     arena = $(arena)
@@ -46,6 +46,9 @@ module.exports = {
       minViewRatio: minRatio, // {Number} e.g. 1.5/2
       maxViewRatio: maxRatio, // {Number} e.g. 2/1
       maxArea, // {Number} 0.8 -> max 80% of arena area are covered by the preview
+      originalSize, // {Object} Original image size, can be used to display a downscaled
+                    // version of the image in the cropping interface, but use the original
+                    // size for crop attributes; e.g. {width: 4000, height: 3000}
       zoomStep, // {Number} e.g. 1.25 -> 125%
       actions: allowedActions,
       minResolution
