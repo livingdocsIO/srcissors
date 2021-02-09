@@ -10,7 +10,7 @@
     "test:ci": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
     "test:watch": "karma start --no-single-run",
     "test:browsers": "karma start --browsers Chrome,Firefox,Safari,Electron",
-    "start": "webpack-dev-server --open --content-base examples",
+    "start": "webpack-dev-server -d --open --content-base examples",
     "build": "webpack && cp -R ./srcissors.* ./examples/"
   },
   "files": [
@@ -36,6 +36,7 @@
     "babel-loader": "^8.0.2",
     "chai": "^3.5.0",
     "electron": "^1.4.15",
+    "eslint": "^7.18.0",
     "jquery": "^3.1.1",
     "karma": "^1.4.1",
     "karma-chai": "^0.1.0",

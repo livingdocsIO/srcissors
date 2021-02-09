@@ -73,6 +73,7 @@ cropper.on('change', function(crop) {
 | `actions` | Object | {pan, zoomOnDoubleClick, resize } Allowed user interactions. By default they are all set to `true`. |
 | `showSurroundingImage` | String | {always, never, panning } Shows the uncropped part of the image. By default set to `never`. |
 | `surroundingImageOpacity` | Number | {0.0 - 1.0} Sets the opacity when showing the uncropped part of the image. By default set to `0.2`. |
+| `originalSize` | Object | Original image size, can be used to display a downscaled version of the image in the cropping interface, but use the original size for crop attributes; e.g. `{width: 4000, height: 3000}`. |
 
 ### HTML
 

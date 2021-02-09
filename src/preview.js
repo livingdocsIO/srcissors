@@ -15,8 +15,7 @@ module.exports = class Preview {
       const height = this.img.height()
       this.ratio = width / height
 
-      this.updateImageDimensions({width, height})
-      this.onReady({width: this.width, height: this.height})
+      this.onReady({width, height})
       this.img.show()
     })
   }

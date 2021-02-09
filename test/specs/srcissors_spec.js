@@ -320,4 +320,57 @@ describe('srcissors', function () {
       expect(outline.get(0).style.opacity).to.equal('0')
     })
   })
+
+  describe('with 4000x3000 originalSize', function () {
+
+    beforeEach(function (done) {
+      this.arena = $(template)
+      this.arena.css({width: 100, height: 100})
+      $(document.body).append(this.arena)
+
+      // Crop a 400x300 image with 4000x3000 originalSize
+      this.crop = srcissors.new({
+        arena: this.arena,
+        originalSize: {width: 4000, height: 3000},
+        url: '/base/test/images/diagonal.jpg'
+      })
+      this.crop.on('ready', done)
+    })
+
+    afterEach(function () {
+      this.arena.remove()
+    })
+
+    it('has initialized the image correctly', function () {
+      expect(this.crop.imageWidth).to.equal(4000)
+      expect(this.crop.imageHeight).to.equal(3000)
+    })
+
+    it('fires a change event after ready', function (done) {
+      this.crop.on('change', function (crop) {
+        expect(crop).to.deep.equal({
+          x: 0,
+          y: 0,
+          width: 4000,
+          height: 3000
+        })
+
+        done()
+      })
+    })
+
+    it('scales crop coordinates on zoom', function (done) {
+      this.crop.zoomIn()
+      this.crop.on('change', function (crop) {
+        expect(crop).to.deep.equal({
+          x: 400,
+          y: 300,
+          width: 3200,
+          height: 2400
+        })
+
+        done()
+      })
+    })
+  })
 })
