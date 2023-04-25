@@ -20,6 +20,10 @@ steps:
   image: livingdocs/editor-base:18
   commands: ["npm run test:ci -s"]
 
+- name: build
+  image: livingdocs/editor-base:18
+  commands: ["npm run build -s"]
+
 - name: release
   image: livingdocs/semantic-release:v1.2.2
   environment:
@@ -32,6 +36,6 @@ trigger:
   event: [push]
 ---
 kind: signature
-hmac: 8106a8978255d0eb49304dbc786c39a6c35572c8251d4246e2da0014cf2d207d
+hmac: 84b017f54ccb2df1406b2bdecfed49a8105816784cc1e9157276baefd50e1382
 
 ...
