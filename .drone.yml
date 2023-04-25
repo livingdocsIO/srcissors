@@ -13,11 +13,11 @@ steps:
       from_secret: GH_TOKEN
 
 - name: npm-install
-  image: livingdocs/editor-base:8.2
+  image: livingdocs/editor-base:18
   commands: ["npm install"]
 
 - name: test
-  image: livingdocs/editor-base:8.2
+  image: livingdocs/editor-base:18
   commands: ["npm run test:ci -s"]
 
 - name: release
@@ -32,6 +32,6 @@ trigger:
   event: [push]
 ---
 kind: signature
-hmac: 248c6c396d3cce5d93b7f42727f9579b8381719ea39a04446b93b85599e64894
+hmac: 8106a8978255d0eb49304dbc786c39a6c35572c8251d4246e2da0014cf2d207d
 
 ...
