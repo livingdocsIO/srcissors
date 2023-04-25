@@ -212,7 +212,9 @@ module.exports = class Crop {
 
     if ((x + width) > this.imageWidth) {
       crop.width = this.imageWidth - x
-    } else if ((y + height) > this.imageHeight) {
+    }
+
+    if ((y + height) > this.imageHeight) {
       crop.height = this.imageHeight - y
     }
 
