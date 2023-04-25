@@ -207,6 +207,9 @@ module.exports = class Crop {
 
   validateCrop (crop) {
     const {x, y, width, height} = crop
+    if (x < 0) crop.x = 0
+    if (y < 0) crop.y = 0
+
     if ((x + width) > this.imageWidth) {
       crop.width = this.imageWidth - x
     } else if ((y + height) > this.imageHeight) {
@@ -413,17 +416,18 @@ module.exports = class Crop {
   // -----------
 
   enforceXy ({x, y}) {
-    if (x < 0) {
-      x = 0
-    } else if (x > (this.preview.width - this.viewWidth)) {
+    if (x > (this.preview.width - this.viewWidth)) {
       x = this.preview.width - this.viewWidth
     }
 
-    if (y < 0) {
-      y = 0
-    } else if (y > (this.preview.height - this.viewHeight)) {
+    if (x < 0) x = 0
+
+
+    if (y > (this.preview.height - this.viewHeight)) {
       y = this.preview.height - this.viewHeight
     }
+
+    if (y < 0) y = 0
 
     return {x, y}
   }
