@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>livingdocsIO/renovate-config:simple"
+    "local>livingdocsIO/renovate-config"
   ]
 }
