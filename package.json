@@ -34,11 +34,23 @@
     "node": ">=6"
   },
   "release": {
-    "extends": "@livingdocs/semantic-release-presets/npm-github",
-    ["@semantic-release/git", {
-      "assets": ["srcissors.*", "examples", "package.json"],
-      "message": "chore(release): ${nextRelease.version} [CI SKIP]\n\n${nextRelease.notes}"
-    }]
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "srcissors.*",
+            "examples/srcissors.*",
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [CI SKIP]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
@@ -46,7 +58,6 @@
     "babel-loader": "^9.1.2",
     "chai": "^4.3.7",
     "electron": "^24.1.2",
-    "eslint": "^8.39.0",
     "karma": "^6.4.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.2.0",

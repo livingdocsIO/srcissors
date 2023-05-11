@@ -1,3 +1,4 @@
+'use strict'
 const $ = require('jquery')
 const Preview = require('./preview')
 const Events = require('./events')

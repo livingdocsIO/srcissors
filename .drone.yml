@@ -7,7 +7,7 @@ clone:
 
 steps:
 - name: eslint
-  image: marcbachmann/eslint:4.19.1
+  image: marcbachmann/eslint:8.0.1
   environment:
     GH_TOKEN:
       from_secret: GH_TOKEN
@@ -25,7 +25,7 @@ steps:
   commands: ["npm run build -s"]
 
 - name: release
-  image: livingdocs/semantic-release:v1.2.2
+  image: livingdocs/semantic-release:v2.1.2
   environment:
     GH_TOKEN:
       from_secret: GH_TOKEN
@@ -36,6 +36,6 @@ trigger:
   event: [push]
 ---
 kind: signature
-hmac: 84b017f54ccb2df1406b2bdecfed49a8105816784cc1e9157276baefd50e1382
+hmac: 6b7d5a5e13b2636eadd54b56b855fac94e68e7b3a44480a0bcc496b70857848e
 
 ...
