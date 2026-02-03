@@ -1,4 +1,7 @@
 'use strict'
+const chai = require('chai')
+window.expect = chai.expect
+
 const $ = require('jquery')
 const srcissors = require('../../src/srcissors')
 
@@ -15,7 +18,6 @@ const template = `
 `
 
 describe('srcissors', function () {
-
   it('creates a new instance', function () {
     const html = $(template)
     const crop = srcissors.new({arena: html})
@@ -24,7 +26,6 @@ describe('srcissors', function () {
   })
 
   describe('with a 100x100 arena', function () {
-
     beforeEach(function (done) {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})
@@ -61,7 +62,6 @@ describe('srcissors', function () {
     })
 
     describe('zoom()', () => {
-
       // Zoom a 400x300 image by factor 2 in an arena of 100x100
       // The view should keep the images aspect ratio and have a size of 100x75
       it('zooms 2x into the center', function (done) {
@@ -96,7 +96,6 @@ describe('srcissors', function () {
     })
 
     describe('setImage()', function () {
-
       beforeEach(function (done) {
         this.crop.on('load', done)
 
@@ -111,7 +110,6 @@ describe('srcissors', function () {
     })
 
     describe('reset()', () => {
-
       it('resets the zoom and ratio to the original', function () {
         this.crop.setRatio(1)
         this.crop.zoom({width: 200})
@@ -127,7 +125,6 @@ describe('srcissors', function () {
   })
 
   describe('with a 100x200 arena', function () {
-
     beforeEach(function (done) {
       this.arena = $(template)
       this.arena.css({width: 100, height: 200})
@@ -151,7 +148,6 @@ describe('srcissors', function () {
     })
 
     describe('setRatio()', () => {
-
       it('sets a square ratio', function (done) {
         this.crop.setRatio(1)
         this.crop.on('change', function (crop) {
@@ -169,7 +165,6 @@ describe('srcissors', function () {
   })
 
   describe('when it is loading the image', function () {
-
     beforeEach(function () {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})
@@ -228,7 +223,6 @@ describe('srcissors', function () {
   })
 
   describe('with surrounding image always enabled', function () {
-
     beforeEach(function (done) {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})
@@ -266,7 +260,6 @@ describe('srcissors', function () {
   })
 
   describe('with surrounding image enabled when panning', function () {
-
     beforeEach(function (done) {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})
@@ -296,7 +289,6 @@ describe('srcissors', function () {
   })
 
   describe('with surrounding image disabled by default', function () {
-
     beforeEach(function () {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})
@@ -323,7 +315,6 @@ describe('srcissors', function () {
   })
 
   describe('with 4000x3000 originalSize', function () {
-
     beforeEach(function (done) {
       this.arena = $(template)
       this.arena.css({width: 100, height: 100})

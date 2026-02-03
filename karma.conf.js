@@ -1,7 +1,7 @@
 'use strict'
 module.exports = function (config) {
   config.set({
-    frameworks: ['mocha', 'sinon-chai'],
+    frameworks: ['mocha'],
     files: [
       {pattern: './test/specs/*.js', watched: false},
       // expose files to tests
