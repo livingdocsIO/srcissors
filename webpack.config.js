@@ -18,24 +18,31 @@ module.exports = {
     }
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-          sourceType: 'unambiguous',
-          presets: [
-            ['@babel/preset-env', {
-              modules: false,
-              targets: {
-                browsers: ['chrome>=49', 'safari>=10', 'firefox>=52', 'ie>=11', 'opera>=49']
-              }
-            }]
-          ]
-        }
-      }]
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              sourceType: 'unambiguous',
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    modules: false,
+                    targets: {
+                      browsers: ['chrome>=49', 'safari>=10', 'firefox>=52', 'ie>=11', 'opera>=49']
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    ]
   },
-  devServer: {inline: true}
+  devServer: {}
 }
