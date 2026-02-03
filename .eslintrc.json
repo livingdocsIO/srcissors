@@ -21,7 +21,6 @@
     "window": false,
     "expect": true,
     "test": true,
-    "sinon": true,
     "angular": true
   },
 
