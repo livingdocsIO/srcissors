@@ -28,7 +28,7 @@
   "main": "srcissors.js",
   "browser": "srcissors.js",
   "peerDependencies": {
-    "jquery": "^3.6.4"
+    "jquery": "^4.0.0"
   },
   "engines": {
     "node": ">=6"
