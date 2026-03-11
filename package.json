@@ -62,7 +62,7 @@
     "@babel/preset-env": "^7.21.4",
     "babel-loader": "^10.0.0",
     "chai": "^6.0.1",
-    "electron": "^40.0.0",
+    "electron": "^41.0.0",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
     "karma-electron": "^7.3.0",
