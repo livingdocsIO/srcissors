@@ -15,7 +15,7 @@ export default {
       name: 'cjs-default-export',
       transform (context) {
         if (context.path.includes('node_modules/jquery')) {
-          return {body: context.body + '\nexport default window.jQuery;\n'}
+          return {body: `${context.body  }\nexport default window.jQuery;\n`}
         }
       }
     }

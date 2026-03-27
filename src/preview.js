@@ -1,14 +1,13 @@
 import $ from 'jquery'
 
 export default class Preview {
-
-  constructor ({onReady, img, opacity, outline}) {
+  constructor({onReady, img, opacity, outline}) {
     this.onReady = onReady
     this.img = img
     this.opacity = opacity
     this.outline = outline
-    this.x = (this.y = 0)
-    this.width = (this.height = 0)
+    this.x = this.y = 0
+    this.width = this.height = 0
 
     this.img.on('load', () => {
       const width = this.img.width()
@@ -20,47 +19,47 @@ export default class Preview {
     })
   }
 
-  setImage ({url}) {
+  setImage({url}) {
     this.url = url
     this.img.attr('src', this.url)
     if (this.outline) this.setBackgroundImage({url: this.url})
   }
 
-  setBackgroundImage ({url}) {
+  setBackgroundImage({url}) {
     if (this.opacity > 0) {
       const bgImg = $('<img>').css({opacity: this.opacity}).attr('src', url)
       this.outline.append(bgImg)
     }
   }
 
-  reset () {
+  reset() {
     this.url = undefined
-    this.x = (this.y = 0)
-    this.width = (this.height = 0)
+    this.x = this.y = 0
+    this.width = this.height = 0
     this.img.attr('src', '')
     this.img.css({width: '', height: '', transform: ''})
     if (this.outline) this.outline.css({transform: ''}).html('')
   }
 
-  setWidth (width) {
+  setWidth(width) {
     this.img.css({width: `${width}px`, height: 'auto'})
     const height = width / this.ratio
     this.updateImageDimensions({width, height})
   }
 
-  setHeight (height) {
+  setHeight(height) {
     this.img.css({width: 'auto', height: `${height}px`})
     const width = height * this.ratio
     this.updateImageDimensions({width, height})
   }
 
-  updateImageDimensions ({width, height}) {
+  updateImageDimensions({width, height}) {
     this.width = width
     this.height = height
     if (this.outline) this.outline.css({width: `${this.width}px`, height: `${this.height}px`})
   }
 
-  pan (x1, y1) {
+  pan(x1, y1) {
     // Without rounding some numbers would not be set to css.
     // e.g: '-5.14957320384e-14'
     this.x = x1
