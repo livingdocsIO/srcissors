@@ -1,5 +1,4 @@
-'use strict'
-const $ = require('jquery')
+import $ from 'jquery'
 
 const getPageCoordinates = function (event) {
   if (event.type.includes('touch')) {
@@ -11,7 +10,7 @@ const getPageCoordinates = function (event) {
   return {pageX: event.pageX, pageY: event.pageY}
 }
 
-module.exports = class Events {
+export default class Events {
   constructor ({parent, view, horizontal, vertical, actions}) {
     this.parent = parent
     this.view = view
@@ -128,5 +127,3 @@ module.exports = class Events {
 
   responsiveArena () {}
 }
-
-// $(window).on('resize', (event) => console.log 'on window resize')

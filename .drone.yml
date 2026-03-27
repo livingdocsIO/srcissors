@@ -13,15 +13,19 @@ steps:
       from_secret: GH_TOKEN
 
 - name: npm-install
-  image: livingdocs/editor-base:18
+  image: livingdocs/editor-base:22
+  environment:
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   commands: ["npm install"]
 
 - name: test
-  image: livingdocs/editor-base:18
+  image: livingdocs/editor-base:22
+  environment:
+    CHROMIUM_PATH: /usr/bin/chromium-browser
   commands: ["npm run test:ci -s"]
 
 - name: build
-  image: livingdocs/editor-base:18
+  image: livingdocs/editor-base:22
   commands: ["npm run build -s"]
 
 - name: release
@@ -36,6 +40,6 @@ trigger:
   event: [push]
 ---
 kind: signature
-hmac: 3358cb6e722460fcfa80f319c2fce6e0c842b00df676d88c0bb4d923af9b34c0
+hmac: 93af62c974043ebe57c721e6fa1cc64b0fc513fa1a6ffd8c497b922fa5efe3c3
 
 ...

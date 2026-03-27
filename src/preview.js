@@ -1,7 +1,6 @@
-'use strict'
-const $ = require('jquery')
+import $ from 'jquery'
 
-module.exports = class Preview {
+export default class Preview {
 
   constructor ({onReady, img, opacity, outline}) {
     this.onReady = onReady
@@ -72,4 +71,3 @@ module.exports = class Preview {
     if (this.outline) this.outline.css({transform: `translate(-${x}px, -${y}px)`})
   }
 }
-

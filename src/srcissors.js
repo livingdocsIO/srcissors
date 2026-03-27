@@ -1,8 +1,7 @@
-'use strict'
-const $ = require('jquery')
-const Crop = require('./crop')
+import $ from 'jquery'
+import Crop from './crop.js'
 
-module.exports = {
+export default {
   new ({
     arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
     minRatio, maxRatio, maxArea, originalSize, zoomStep, crop, actions, minResolution,

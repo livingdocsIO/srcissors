@@ -1,9 +1,6 @@
-'use strict'
-const chai = require('chai')
-window.expect = chai.expect
-
-const $ = require('jquery')
-const srcissors = require('../../src/srcissors')
+import {expect} from 'chai'
+import $ from 'jquery'
+import srcissors from '../../src/srcissors.js'
 
 const template = `
   <div class="crop-arena">
@@ -34,7 +31,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg'
+        url: '/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
     })
@@ -100,7 +97,7 @@ describe('srcissors', function () {
         this.crop.on('load', done)
 
         // Set a different 300x400 image
-        this.crop.setImage('/base/test/images/berge.jpg')
+        this.crop.setImage('/test/images/berge.jpg')
       })
 
       it('sets the new image dimensions', function () {
@@ -133,7 +130,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg'
+        url: '/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
     })
@@ -173,7 +170,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg'
+        url: '/test/images/diagonal.jpg'
       })
     })
 
@@ -231,7 +228,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg',
+        url: '/test/images/diagonal.jpg',
         showSurroundingImage: 'always',
         surroundingImageOpacity: 0.4
       })
@@ -252,7 +249,7 @@ describe('srcissors', function () {
     })
 
     it('cleans up the crop outline when setting a different image', function () {
-      this.crop.setImage('/base/test/images/berge.jpg')
+      this.crop.setImage('/test/images/berge.jpg')
 
       const bgImg = this.arena.find('.crop-outline img')
       expect(bgImg.length).to.equal(1)
@@ -268,7 +265,7 @@ describe('srcissors', function () {
       // Crop a 400x300 image
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg',
+        url: '/test/images/diagonal.jpg',
         showSurroundingImage: 'panning'
       })
       this.crop.on('ready', done)
@@ -302,7 +299,7 @@ describe('srcissors', function () {
     it('omits the background image without surrounding image config', function (done) {
       this.crop = srcissors.new({
         arena: this.arena,
-        url: '/base/test/images/diagonal.jpg'
+        url: '/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
 
@@ -324,7 +321,7 @@ describe('srcissors', function () {
       this.crop = srcissors.new({
         arena: this.arena,
         originalSize: {width: 4000, height: 3000},
-        url: '/base/test/images/diagonal.jpg'
+        url: '/test/images/diagonal.jpg'
       })
       this.crop.on('ready', done)
     })
