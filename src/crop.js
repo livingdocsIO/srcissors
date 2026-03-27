@@ -3,10 +3,25 @@ import Preview from './preview.js'
 import Events from './events.js'
 
 export default class Crop {
-  constructor ({
-    arena, view, img, outline, url, fixedWidth, fixedHeight,
-    minViewWidth, minViewHeight, minViewRatio, maxViewRatio, originalSize, crop,
-    zoomStep, maxArea, actions, minResolution, surroundingImageOpacity,
+  constructor({
+    arena,
+    view,
+    img,
+    outline,
+    url,
+    fixedWidth,
+    fixedHeight,
+    minViewWidth,
+    minViewHeight,
+    minViewRatio,
+    maxViewRatio,
+    originalSize,
+    crop,
+    zoomStep,
+    maxArea,
+    actions,
+    minResolution,
+    surroundingImageOpacity,
     showSurroundingImage
   }) {
     // CSS classes
@@ -50,7 +65,7 @@ export default class Crop {
     // todo: consider to calculate maxArea with regards to the
     // maximum space an image can within the area. That should
     // be more reliable.
-    if (maxArea) this.maxArea = (this.arenaWidth * this.arenaHeight) * maxArea
+    if (maxArea) this.maxArea = this.arenaWidth * this.arenaHeight * maxArea
 
     if (this.outline) this.setSurroundingImageVisibility(showSurroundingImage)
 
@@ -64,7 +79,7 @@ export default class Crop {
     this.setImage(url)
   }
 
-  initializeReadyState () {
+  initializeReadyState() {
     this.isReady = false
     if (this.readyEvent != null) {
       this.readyEvent.empty()
@@ -72,7 +87,7 @@ export default class Crop {
     this.readyEvent = $.Callbacks('memory once')
   }
 
-  setImage (url) {
+  setImage(url) {
     if (url === this.preview.url) return
 
     if (this.isInitialized) this.preview.reset()
@@ -81,7 +96,7 @@ export default class Crop {
     this.preview.setImage({url})
   }
 
-  setSurroundingImageVisibility (visibility) {
+  setSurroundingImageVisibility(visibility) {
     // visibility: always|panning|never
     // override opacity in crop-outline--active css class
     this.surroundingImageOpacity = parseFloat(this.surroundingImageOpacity || 0.2)
@@ -90,20 +105,21 @@ export default class Crop {
       this.outline.css('opacity', 1.0)
     } else if (visibility === 'panning') {
       this.outline.css('opacity', null)
-    } else { // 'never' default
+    } else {
+      // 'never' default
       this.outline.css('opacity', 0)
       this.surroundingImageOpacity = 0
     }
   }
 
-  reset () {
+  reset() {
     if (!this.isReady) return
 
     this.resize({width: this.imageWidth, height: this.imageHeight})
     this.zoomAllOut()
   }
 
-  onPreviewReady (previewImageSize) {
+  onPreviewReady(previewImageSize) {
     this.checkRatio(previewImageSize)
     const {width, height} = this.originalSize || previewImageSize
 
@@ -124,7 +140,7 @@ export default class Crop {
     this.imageRatio = this.imageWidth / this.imageHeight
     const imageResolution = this.imageWidth * this.imageHeight
 
-    if (this.minResolution && (this.minResolution > imageResolution)) {
+    if (this.minResolution && this.minResolution > imageResolution) {
       // If the minimal required resolution is bigger than the actual image
       // resolution, we ignore the configuration
       delete this.minResolution
@@ -134,19 +150,23 @@ export default class Crop {
       // For any given image resolution with a minimal required resolution
       // we can calculate both, a minimal resolution and a maximal resolution
       const minRatioForResolution = this.minResolution / (this.imageHeight * this.imageHeight)
-      if (!this.minViewRatio || (this.minViewRatio < minRatioForResolution)) {
+      if (!this.minViewRatio || this.minViewRatio < minRatioForResolution) {
         this.minViewRatio = minRatioForResolution
       }
       const maxRatioForResolution = (this.imageWidth * this.imageWidth) / this.minResolution
-      if (!this.maxViewRatio || (this.maxViewRatio > maxRatioForResolution)) {
+      if (!this.maxViewRatio || this.maxViewRatio > maxRatioForResolution) {
         this.maxViewRatio = maxRatioForResolution
       }
     }
 
     this.calcMaxMinDimensions()
 
-    if (this.fixedWidth) { keepDimension = 'width' }
-    if (this.fixedHeight) { keepDimension = 'height' }
+    if (this.fixedWidth) {
+      keepDimension = 'width'
+    }
+    if (this.fixedHeight) {
+      keepDimension = 'height'
+    }
     this.setViewDimensions({
       width: this.imageWidth,
       height: this.imageHeight,
@@ -157,7 +177,7 @@ export default class Crop {
     this.isReady = true
     this.view.removeClass(this.loadingCssClass)
 
-    if (!this.isInitialized && (this.initialCrop != null)) {
+    if (!this.isInitialized && this.initialCrop != null) {
       this.setCrop(this.initialCrop)
     } else {
       this.zoomAllOut()
@@ -169,7 +189,7 @@ export default class Crop {
     this.loadEvent.fire()
   }
 
-  setCrop ({x, y, width, height}) {
+  setCrop({x, y, width, height}) {
     if (!this.isReady) {
       this.on('ready', () => this.setCrop({x, y, width, height}))
       return
@@ -184,7 +204,7 @@ export default class Crop {
     this.pan({x: x * factor, y: y * factor})
   }
 
-  getCrop () {
+  getCrop() {
     const factor = this.preview.width / this.imageWidth
     const crop = {
       x: this.preview.x / factor,
@@ -198,30 +218,30 @@ export default class Crop {
     return crop
   }
 
-  roundCrop (crop) {
+  roundCrop(crop) {
     for (const name in crop) {
       const value = crop[name]
       crop[name] = Math.round(value)
     }
   }
 
-  validateCrop (crop) {
+  validateCrop(crop) {
     const {x, y, width, height} = crop
     if (x < 0) crop.x = 0
     if (y < 0) crop.y = 0
 
-    if ((x + width) > this.imageWidth) {
+    if (x + width > this.imageWidth) {
       crop.width = this.imageWidth - x
     }
 
-    if ((y + height) > this.imageHeight) {
+    if (y + height > this.imageHeight) {
       crop.height = this.imageHeight - y
     }
 
     return crop
   }
 
-  setRatio (ratio, keepDimension) {
+  setRatio(ratio, keepDimension) {
     let height, width
     if (!this.isReady) {
       this.on('ready', () => this.setRatio(ratio, keepDimension))
@@ -245,7 +265,7 @@ export default class Crop {
   // Event handling
   // --------------
 
-  onPan (data) {
+  onPan(data) {
     if (!this.isPanning) {
       this.isPanning = true
       this.arena.addClass(this.panningCssClass)
@@ -257,20 +277,20 @@ export default class Crop {
     this.pan({x: newX, y: newY})
   }
 
-  onPanEnd () {
+  onPanEnd() {
     this.isPanning = false
     this.arena.removeClass(this.panningCssClass)
     return this.outline.removeClass(this.outlineCssClass)
   }
 
-  onDoubleClick ({pageX, pageY}) {
+  onDoubleClick({pageX, pageY}) {
     const {left, top} = this.view[0].getBoundingClientRect()
     const viewX = pageX - left
     const viewY = pageY - top
     this.zoomIn({viewX, viewY})
   }
 
-  onResize ({position, dx, dy}) {
+  onResize({position, dx, dy}) {
     if (!this.isResizing) {
       this.isResizing = true
       this.resizeFocusPoint = this.getFocusPoint()
@@ -285,12 +305,12 @@ export default class Crop {
     }
   }
 
-  onResizeEnd () {
+  onResizeEnd() {
     this.isResizing = false
     this.resizeFocusPoint = undefined
   }
 
-  resize ({width, height, keepDimension}) {
+  resize({width, height, keepDimension}) {
     this.setViewDimensions({width, height, keepDimension})
 
     // Update view center of focus point
@@ -307,12 +327,12 @@ export default class Crop {
     })
   }
 
-  setViewDimensions ({width, height, keepDimension}) {
+  setViewDimensions({width, height, keepDimension}) {
     if (this.maxArea) {
-      ({width, height} = this.enforceMaxArea({width, height, keepDimension}))
+      ;({width, height} = this.enforceMaxArea({width, height, keepDimension}))
     }
 
-    ({width, height} = this.enforceViewDimensions({width, height, keepDimension}))
+    ;({width, height} = this.enforceViewDimensions({width, height, keepDimension}))
 
     this.view.css({width, height})
     this.viewWidth = width
@@ -332,7 +352,7 @@ export default class Crop {
   // Update view
   // -----------
 
-  zoomAllOut () {
+  zoomAllOut() {
     if (this.isWidthRestricting()) {
       this.zoom({width: this.viewWidth})
     } else {
@@ -340,8 +360,10 @@ export default class Crop {
     }
   }
 
-  zoomIn (params) {
-    if (params == null) { params = {} }
+  zoomIn(params) {
+    if (params == null) {
+      params = {}
+    }
     if (this.isWidthRestricting()) {
       params.width = this.preview.width * this.zoomInStep
     } else {
@@ -351,8 +373,10 @@ export default class Crop {
     this.zoom(params)
   }
 
-  zoomOut (params) {
-    if (params == null) { params = {} }
+  zoomOut(params) {
+    if (params == null) {
+      params = {}
+    }
     if (this.isWidthRestricting()) {
       params.width = this.preview.width * this.zoomOutStep
     } else {
@@ -362,10 +386,12 @@ export default class Crop {
     this.zoom(params)
   }
 
-  zoom ({width, height, viewX, viewY, focusPoint}) {
-    if (focusPoint == null) { focusPoint = this.getFocusPoint({viewX, viewY}) }
+  zoom({width, height, viewX, viewY, focusPoint}) {
+    if (focusPoint == null) {
+      focusPoint = this.getFocusPoint({viewX, viewY})
+    }
 
-    ({width, height} = this.enforceZoom({width, height}))
+    ;({width, height} = this.enforceZoom({width, height}))
     if (width != null) {
       this.preview.setWidth(width)
       this.fireChange()
@@ -378,11 +404,17 @@ export default class Crop {
   }
 
   // returns {Object} e.g. percentX: 0.2, percentY: 0.5
-  getFocusPoint (param) {
-    if (param == null) { param = {} }
+  getFocusPoint(param) {
+    if (param == null) {
+      param = {}
+    }
     let {viewX, viewY} = param
-    if (viewX == null) { viewX = this.viewWidth / 2 }
-    if (viewY == null) { viewY = this.viewHeight / 2 }
+    if (viewX == null) {
+      viewX = this.viewWidth / 2
+    }
+    if (viewY == null) {
+      viewY = this.viewHeight / 2
+    }
     const x = this.preview.x + viewX
     const y = this.preview.y + viewY
     const percentX = x / this.preview.width
@@ -390,7 +422,7 @@ export default class Crop {
     return {percentX, percentY, viewX, viewY}
   }
 
-  focus ({percentX, percentY, viewX, viewY}) {
+  focus({percentX, percentY, viewX, viewY}) {
     let x = this.preview.width * percentX
     let y = this.preview.height * percentY
     x = x - viewX
@@ -399,7 +431,7 @@ export default class Crop {
     this.pan({x, y})
   }
 
-  center () {
+  center() {
     const newX = (this.preview.width - this.viewWidth) / 2
     const newY = (this.preview.height - this.viewHeight) / 2
     this.pan({x: newX, y: newY})
@@ -408,7 +440,7 @@ export default class Crop {
   // @param { Object }
   // - x {Number} pixel to pan to the left
   // - y {Number} pixels to pan to the top
-  pan (data) {
+  pan(data) {
     data = this.enforceXy(data)
     this.preview.pan(data.x, data.y)
     this.fireChange()
@@ -417,15 +449,14 @@ export default class Crop {
   // Validations
   // -----------
 
-  enforceXy ({x, y}) {
-    if (x > (this.preview.width - this.viewWidth)) {
+  enforceXy({x, y}) {
+    if (x > this.preview.width - this.viewWidth) {
       x = this.preview.width - this.viewWidth
     }
 
     if (x < 0) x = 0
 
-
-    if (y > (this.preview.height - this.viewHeight)) {
+    if (y > this.preview.height - this.viewHeight) {
       y = this.preview.height - this.viewHeight
     }
 
@@ -434,24 +465,23 @@ export default class Crop {
     return {x, y}
   }
 
-  enforceZoom ({width, height}) {
-
-    if ((width != null) && this.maxImageWidth && (width > this.maxImageWidth)) {
+  enforceZoom({width, height}) {
+    if (width != null && this.maxImageWidth && width > this.maxImageWidth) {
       // prevent zooming in past the required resolution defined by minResolution
       return {width: this.maxImageWidth}
     }
 
-    if ((width != null) && (width < this.viewWidth)) {
+    if (width != null && width < this.viewWidth) {
       // prevent zooming out past covering the view completely
       return {width: this.viewWidth}
     }
 
-    if ((height != null) && this.maxImageHeight && (height > this.maxImageHeight)) {
+    if (height != null && this.maxImageHeight && height > this.maxImageHeight) {
       // prevent zooming in past the required resolution defined by minResolution
       return {height: this.maxImageHeight}
     }
 
-    if ((height != null) && (height < this.viewHeight)) {
+    if (height != null && height < this.viewHeight) {
       // prevent zooming out past covering the view completely
       return {height: this.viewHeight}
     }
@@ -459,41 +489,41 @@ export default class Crop {
     return {width, height}
   }
 
-  calcMaxMinDimensions () {
+  calcMaxMinDimensions() {
     this.maxWidth = this.min([this.arenaWidth, this.imageWidth])
     this.maxHeight = this.min([this.arenaHeight, this.imageHeight])
     this.minWidth = this.minViewWidth || 0
     this.minHeight = this.minViewHeight || 0
 
-    if (this.fixedWidth) this.maxWidth = (this.minWidth = this.fixedWidth)
-    if (this.fixedHeight) this.maxHeight = (this.minHeight = this.fixedHeight)
+    if (this.fixedWidth) this.maxWidth = this.minWidth = this.fixedWidth
+    if (this.fixedHeight) this.maxHeight = this.minHeight = this.fixedHeight
   }
 
-  areDimensionsValid ({width, height, keepDimension}) {
+  areDimensionsValid({width, height, keepDimension}) {
     const ratio = width / height
 
     const invalid =
-      (width < this.minWidth) ||
-      (width > this.maxWidth) ||
-      (height < this.minHeight) ||
-      (height > this.maxHeight) ||
-      (ratio < this.minViewRatio) ||
-      (ratio > this.maxViewRatio)
+      width < this.minWidth ||
+      width > this.maxWidth ||
+      height < this.minHeight ||
+      height > this.maxHeight ||
+      ratio < this.minViewRatio ||
+      ratio > this.maxViewRatio
 
     return !invalid
   }
 
-  isValidRatio (ratio) {
-    return !((ratio < this.minViewRatio) || (ratio > this.maxViewRatio))
+  isValidRatio(ratio) {
+    return !(ratio < this.minViewRatio || ratio > this.maxViewRatio)
   }
 
-  enforceValidRatio (ratio) {
+  enforceValidRatio(ratio) {
     if (ratio < this.minViewRatio) return this.minViewRatio
     if (ratio > this.maxViewRatio) return this.maxViewRatio
     return ratio
   }
 
-  enforceViewDimensions ({width, height, keepDimension}) {
+  enforceViewDimensions({width, height, keepDimension}) {
     let newHeight, newWidth, ratio
     if (width < this.minWidth) newWidth = this.minWidth
     if (width > this.maxWidth) newWidth = this.maxWidth
@@ -507,22 +537,21 @@ export default class Crop {
       // check max/min ratios
       ratio = width / height
       if (!this.isValidRatio(ratio)) {
-        ratio = this.enforceValidRatio(ratio);
-        ({width, height} = this.getRatioBox({ratio, width, height, keepDimension}))
-        if ((width > this.arenaWidth) || (height > this.arenaHeight)) {
-          ({width, height} = this.centerAlign(this.maxWidth, this.maxHeight, ratio))
+        ratio = this.enforceValidRatio(ratio)
+        ;({width, height} = this.getRatioBox({ratio, width, height, keepDimension}))
+        if (width > this.arenaWidth || height > this.arenaHeight) {
+          ;({width, height} = this.centerAlign(this.maxWidth, this.maxHeight, ratio))
         }
       }
-
     } else if (newWidth || newHeight) {
-      ratio = this.enforceValidRatio(width / height);
-      ({width, height} = this.centerAlign(this.maxWidth, this.maxHeight, ratio))
+      ratio = this.enforceValidRatio(width / height)
+      ;({width, height} = this.centerAlign(this.maxWidth, this.maxHeight, ratio))
     }
 
     return {width, height}
   }
 
-  enforceMaxArea ({width, height, keepDimension}) {
+  enforceMaxArea({width, height, keepDimension}) {
     let ratio = width / height
 
     if (keepDimension === 'width') {
@@ -531,7 +560,8 @@ export default class Crop {
     } else if (keepDimension === 'height') {
       width = this.maxArea / height
       ratio = width / height
-    } else { // keep ratio
+    } else {
+      // keep ratio
       width = Math.sqrt(this.maxArea * ratio)
       height = width / ratio
     }
@@ -545,14 +575,16 @@ export default class Crop {
     return {width, height}
   }
 
-  checkRatio (previewImageSize) {
+  checkRatio(previewImageSize) {
     if (this.originalSize) {
       const expectedRatio = this.originalSize.width / this.originalSize.height
       const actualRatio = previewImageSize.width / previewImageSize.height
       const percentageChange = ((actualRatio - expectedRatio) / expectedRatio) * 100
       if (Math.abs(percentageChange) > 1) {
-        throw new Error(`srcissors: Displayed image has a different image ratio than the ` +
-                        `one configured in 'originalRatio': ${expectedRatio} vs ${actualRatio}`)
+        throw new Error(
+          `srcissors: Displayed image has a different image ratio than the ` +
+            `one configured in 'originalRatio': ${expectedRatio} vs ${actualRatio}`
+        )
       }
     }
   }
@@ -566,14 +598,14 @@ export default class Crop {
   //  a ratio greater than one is a wide image format)
 
   // Check if the width or height is restricting
-  isWidthRestricting () {
+  isWidthRestricting() {
     return this.viewRatio >= this.imageRatio
   }
 
-  getRatioBox ({ratio, width, height, keepDimension}) {
-    if ((keepDimension === 'width') || (height == null)) {
+  getRatioBox({ratio, width, height, keepDimension}) {
+    if (keepDimension === 'width' || height == null) {
       height = width / ratio
-    } else if ((keepDimension === 'height') || (width == null)) {
+    } else if (keepDimension === 'height' || width == null) {
       width = height * ratio
     } else {
       height = width / ratio
@@ -582,9 +614,9 @@ export default class Crop {
     return {width, height}
   }
 
-  centerAlign (areaWidth, areaHeight, ratio) {
+  centerAlign(areaWidth, areaHeight, ratio) {
     let height, width, x, y
-    if ((areaWidth / areaHeight) > ratio) {
+    if (areaWidth / areaHeight > ratio) {
       width = areaHeight * ratio
       x = (areaWidth - width) / 2
     } else {
@@ -601,7 +633,7 @@ export default class Crop {
     }
   }
 
-  min (array) {
+  min(array) {
     let min = array[0]
     for (const number of array) {
       if (number < min) min = number
@@ -613,17 +645,17 @@ export default class Crop {
   // Events
   // ------
 
-  on (name, callback) {
+  on(name, callback) {
     return this[`${name}Event`].add(callback)
   }
 
-  off (name, callback) {
+  off(name, callback) {
     return this[`${name}Event`].remove(callback)
   }
 
   // Debounce change events so they are not fired more
   // than once per tick.
-  fireChange () {
+  fireChange() {
     if (this.changeDispatch != null) return
 
     this.changeDispatch = setTimeout(() => {
@@ -635,8 +667,8 @@ export default class Crop {
   // Development helpers
   // -------------------
 
-  debug () {
-    const r = num => Math.round(num * 10) / 10
+  debug() {
+    const r = (num) => Math.round(num * 10) / 10
 
     const obj = {
       arena: `${r(this.arenaWidth)}x${r(this.arenaHeight)}`,

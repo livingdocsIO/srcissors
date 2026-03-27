@@ -2,10 +2,23 @@ import $ from 'jquery'
 import Crop from './crop.js'
 
 export default {
-  new ({
-    arena, url, fixedWidth, fixedHeight, minWidth, minHeight,
-    minRatio, maxRatio, maxArea, originalSize, zoomStep, crop, actions, minResolution,
-    surroundingImageOpacity, showSurroundingImage
+  new({
+    arena,
+    url,
+    fixedWidth,
+    fixedHeight,
+    minWidth,
+    minHeight,
+    minRatio,
+    maxRatio,
+    maxArea,
+    originalSize,
+    zoomStep,
+    crop,
+    actions,
+    minResolution,
+    surroundingImageOpacity,
+    showSurroundingImage
   }) {
     arena = $(arena)
     const view = arena.find('.crop-view')
@@ -13,7 +26,9 @@ export default {
     const img = $('<img>')
     preview.append(img)
     let outline = view.find('.crop-outline')
-    if (!outline.length) { outline = undefined }
+    if (!outline.length) {
+      outline = undefined
+    }
 
     const allowedActions = {
       pan: true,
@@ -25,10 +40,16 @@ export default {
 
     $.extend(allowedActions, actions)
 
-    if (zoomStep == null) { zoomStep = 1.25 }
+    if (zoomStep == null) {
+      zoomStep = 1.25
+    }
 
-    if (minWidth == null) { minWidth = 50 }
-    if (minHeight == null) { minHeight = 50 }
+    if (minWidth == null) {
+      minWidth = 50
+    }
+    if (minHeight == null) {
+      minHeight = 50
+    }
 
     return new Crop({
       url, // {String}
@@ -47,8 +68,8 @@ export default {
       maxViewRatio: maxRatio, // {Number} e.g. 2/1
       maxArea, // {Number} 0.8 -> max 80% of arena area are covered by the preview
       originalSize, // {Object} Original image size, can be used to display a downscaled
-                    // version of the image in the cropping interface, but use the original
-                    // size for crop attributes; e.g. {width: 4000, height: 3000}
+      // version of the image in the cropping interface, but use the original
+      // size for crop attributes; e.g. {width: 4000, height: 3000}
       zoomStep, // {Number} e.g. 1.25 -> 125%
       actions: allowedActions,
       minResolution
