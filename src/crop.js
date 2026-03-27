@@ -1,9 +1,8 @@
-'use strict'
-const $ = require('jquery')
-const Preview = require('./preview')
-const Events = require('./events')
+import $ from 'jquery'
+import Preview from './preview.js'
+import Events from './events.js'
 
-module.exports = class Crop {
+export default class Crop {
   constructor ({
     arena, view, img, outline, url, fixedWidth, fixedHeight,
     minViewWidth, minViewHeight, minViewRatio, maxViewRatio, originalSize, crop,
