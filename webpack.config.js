@@ -4,21 +4,18 @@ export default {
   mode: 'production',
   devtool: 'source-map',
   entry: './src/srcissors.js',
+  experiments: {
+    outputModule: true
+  },
   output: {
     filename: './srcissors.js',
     path: fileURLToPath(new URL('.', import.meta.url)),
     library: {
-      name: 'srcissors',
-      type: 'umd',
-      export: 'default'
+      type: 'module'
     }
   },
+  externalsType: 'module',
   externals: {
-    jquery: {
-      commonjs: 'jquery',
-      commonjs2: 'jquery',
-      amd: 'jquery',
-      root: 'jQuery'
-    }
+    jquery: 'jquery'
   }
 }

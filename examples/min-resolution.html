@@ -36,13 +36,17 @@
       </div>
     </div>
 
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "jquery": "https://cdn.jsdelivr.net/npm/jquery@2.1.3/+esm"
+        }
+      }
+    </script>
 
-    <!-- srcissors. yeah! -->
-    <script src="srcissors.js"></script>
-
-    <script>
+    <script type="module">
+      import $ from 'jquery'
+      import srcissors from './srcissors.js'
 
       $(document).ready(function() {
         var crop = window.c = srcissors.new({

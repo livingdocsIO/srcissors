@@ -41,13 +41,18 @@
       <a class="reset-image" href="">reset image</a>
     </div>
 
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "jquery": "https://cdn.jsdelivr.net/npm/jquery@2.1.3/+esm"
+        }
+      }
+    </script>
 
-    <!-- srcissors. yeah! -->
-    <script src="srcissors.js"></script>
+    <script type="module">
+      import $ from 'jquery'
+      import srcissors from './srcissors.js'
 
-    <script>
       $(document).ready(function() {
         var crop = srcissors.new({
           arena: $('.crop-arena'),
