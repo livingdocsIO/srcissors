@@ -1,6 +1,6 @@
 {
   "name": "srcissors",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "module",
   "homepage": "https://github.com/livingdocsIO/srcissors",
   "description": "Image cropping for responsive images",
