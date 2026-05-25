@@ -61,7 +61,7 @@
     "@web/test-runner-playwright": "latest",
     "chai": "^6.0.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^62.8.1",
+    "eslint-plugin-jsdoc": "^63.0.0",
     "globals": "^17.4.0",
     "webpack": "^5.80.0",
     "webpack-cli": "^7.0.0",
