@@ -362,4 +362,60 @@ describe('srcissors', function () {
       })
     })
   })
+
+  describe('setCrop() with a minResolution', function () {
+    beforeEach(function () {
+      this.arena = $(template)
+      this.arena.css({width: 400, height: 300})
+      $(document.body).append(this.arena)
+    })
+
+    afterEach(function () {
+      this.arena.remove()
+    })
+
+    it('returns the requested crop unchanged with no minResolution', function (done) {
+      const crop = srcissors.new({
+        arena: this.arena,
+        url: '/test/images/diagonal.jpg'
+      })
+
+      crop.on('ready', () => {
+        crop.setCrop({x: 100, y: 50, width: 150, height: 200})
+        expect(crop.getCrop()).to.deep.equal({x: 100, y: 50, width: 150, height: 200})
+        done()
+      })
+    })
+
+    it('returns the requested crop unchanged when the minResolution can be met', function (done) {
+      const crop = srcissors.new({
+        arena: this.arena,
+        url: '/test/images/diagonal.jpg',
+        minResolution: 10000
+      })
+
+      crop.on('ready', () => {
+        crop.setCrop({x: 100, y: 50, width: 150, height: 200})
+        expect(crop.getCrop()).to.deep.equal({x: 100, y: 50, width: 150, height: 200})
+        done()
+      })
+    })
+
+    it('locks the crop centered on the request when the minResolution cannot be met', function (done) {
+      const crop = srcissors.new({
+        arena: this.arena,
+        url: '/test/images/diagonal.jpg',
+        minResolution: 99999
+      })
+
+      crop.on('ready', () => {
+        crop.setCrop({x: 100, y: 50, width: 150, height: 200})
+
+        // The requested crop center is (175, 150). The locked 225x300 crop is
+        // centered on it: x = 175 - 225 / 2 = 62.5 (rounds to 62), y = 0.
+        expect(crop.getCrop()).to.deep.equal({x: 62, y: 0, width: 225, height: 300})
+        done()
+      })
+    })
+  })
 })
