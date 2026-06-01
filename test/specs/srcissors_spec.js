@@ -362,4 +362,34 @@ describe('srcissors', function () {
       })
     })
   })
+
+  describe('with a minResolution that cannot be met at the crop ratio', function () {
+    beforeEach(function (done) {
+      this.arena = $(template)
+      this.arena.css({width: 400, height: 300})
+      $(document.body).append(this.arena)
+
+      this.crop = srcissors.new({
+        arena: this.arena,
+        url: '/test/images/diagonal.jpg',
+        minResolution: 90000
+      })
+      this.crop.on('ready', done)
+    })
+
+    afterEach(function () {
+      this.arena.remove()
+    })
+
+    it('locks the crop at the largest possible area instead of rendering a broken crop', function () {
+      this.crop.setCrop({x: 100, y: 50, width: 150, height: 200})
+
+      expect(this.crop.getCrop()).to.deep.equal({
+        x: 150,
+        y: 0,
+        width: 225,
+        height: 300
+      })
+    })
+  })
 })

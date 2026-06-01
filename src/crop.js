@@ -342,8 +342,21 @@ export default class Crop {
     if (this.minResolution) {
       const minZoomPixelWidth = Math.sqrt(this.minResolution * this.viewRatio)
       const minZoomPixelHeight = Math.sqrt(this.minResolution / this.viewRatio)
-      this.maxImageWidth = (this.viewWidth / minZoomPixelWidth) * this.imageWidth
-      this.maxImageHeight = (this.viewHeight / minZoomPixelHeight) * this.imageHeight
+      const maxImageWidth = (this.viewWidth / minZoomPixelWidth) * this.imageWidth
+      const maxImageHeight = (this.viewHeight / minZoomPixelHeight) * this.imageHeight
+
+      // Depending on the image size and configured ratio, the required
+      // resolution cannot always be reached.
+      if (maxImageWidth >= this.viewWidth && maxImageHeight >= this.viewHeight) {
+        this.maxImageWidth = maxImageWidth
+        this.maxImageHeight = maxImageHeight
+      } else {
+        // minResolution is unreachable at this ratio. Lock the zoom at the
+        // most zoomed-out state, where the crop covers the largest possible
+        // image area.
+        this.maxImageWidth = Math.max(this.viewWidth, this.viewHeight * this.imageRatio)
+        this.maxImageHeight = this.maxImageWidth / this.imageRatio
+      }
     }
 
     this.fireChange()
