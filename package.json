@@ -65,6 +65,6 @@
     "globals": "^17.4.0",
     "webpack": "^5.80.0",
     "webpack-cli": "^7.0.0",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^6.0.0"
   }
 }
